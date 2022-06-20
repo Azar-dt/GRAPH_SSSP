@@ -2,11 +2,14 @@ package com.graph.graph;
 
 import com.graph.graph.algorithm.Algorithm;
 import com.graph.graph.algorithm.BFS;
+import com.graph.graph.algorithm.BellmanFord;
 import com.graph.graph.algorithm.Dijkstra;
 import com.graph.graph.context.Context;
 import com.graph.graph.graphcore.Graph;
+import com.graph.graph.step.Step;
 import com.graph.graph.utils.PressEnterToContinue;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -25,7 +28,8 @@ public class Main {
             System.out.println("Single shortest path algorithm");
             System.out.println("1. Create graph");
             System.out.println("2. Choose algorithm");
-            System.out.println("3. Play");
+            System.out.println("3. Choose start vertex");
+            System.out.println("4. Run algorithm");
             System.out.println("0. Exit");
             System.out.println("----------------------------------------------------");
             int choose;
@@ -37,9 +41,10 @@ public class Main {
                     chooseAlgorithm();
                     break;
                 case 3:
-                    context.setAlgorithm(algorithm);
-                    context.play();
-                    PressEnterToContinue.run();
+                    chooseStartVertex();
+                    break;
+                case 4:
+                    runAlgorithm();
                     break;
                 case 0:
                     return; // exit
@@ -49,7 +54,6 @@ public class Main {
 
     public static void chooseAlgorithm() {
         Scanner scanner = new Scanner(System.in);
-
         do {
             System.out.println("----------------------------------------------------");
             System.out.println("Choose algorithm");
@@ -62,21 +66,44 @@ public class Main {
             switch (choose = scanner.nextInt()) {
                 case 1:
                     algorithm = new BFS();
-                    algorithm.setGraph(graph);
                     System.out.println("BFS is selected");
+                    algorithm.setGraph(graph);
                     PressEnterToContinue.run();
                     return;
                 case 2:
                     algorithm = new Dijkstra();
-                    algorithm.setGraph(graph);
                     System.out.println("Dijkstra is selected");
+                    algorithm.setGraph(graph);
                     PressEnterToContinue.run();
                     return;
+                case 3:
+                    algorithm = new BellmanFord();
+                    System.out.println("BellmanFord is selected");
+                    algorithm.setGraph(graph);
+                    PressEnterToContinue.run();
+                    return;
+
                 case 0:
                     return; // exit
                 default:
                     System.out.println("Invalid input");
                     break;
+            }
+        } while (true);
+    }
+
+    public static void chooseStartVertex() {
+        Scanner scanner = new Scanner(System.in);
+        do {
+            System.out.println("Choose start vertex");
+            String startVertexId = scanner.nextLine();
+            if (graph.getVertex(startVertexId) == null) {
+                System.out.println("Invalid input");
+            } else {
+                algorithm.setStartVertex(graph.getVertex(startVertexId));
+                System.out.println("Start vertex is selected");
+                PressEnterToContinue.run();
+                return;
             }
         } while (true);
     }
@@ -128,6 +155,12 @@ public class Main {
                     return;
             }
         } while (true);
+    }
+
+    public static void runAlgorithm() {
+        context.setAlgorithm(algorithm);
+        context.play();
+        algorithm.showStep();
     }
 
     public static void addVertexToGraph() {

@@ -1,14 +1,12 @@
 package com.graph.graph.context;
 
 import com.graph.graph.algorithm.Algorithm;
-import com.graph.graph.graphcore.Graph;
 
 public class Context {
     private Algorithm algorithm;
 
-
     public void play() {
-        algorithm.explore();
+        algorithm.run();
     }
 
     public Algorithm getAlgorithm() {
