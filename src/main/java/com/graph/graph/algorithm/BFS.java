@@ -8,19 +8,10 @@ import java.io.IOException;
 import java.util.*;
 
 public class BFS extends Algorithm {
-    // su dung pseudoStep co dinh thay vi tao ra 1 class
-    private HashMap<Integer, String> pseudoStep = new HashMap<Integer, String>();
-
-    // Declaring ANSI_RESET so that we can reset the color
-    public static final String ANSI_RESET = "\u001B[0m";
-
-    // Declaring the color
-    // Custom declaration
-    public static final String ANSI_YELLOW = "\u001B[33m";
-
     public BFS() {
         super();
         // init pseudoStep
+        pseudoStep.clear();
         pseudoStep.put(0, "initSSSP, Q.push(sourceVertex)");
         pseudoStep.put(1, "while Q is not empty // Q is normal queue");
         pseudoStep.put(2, "for each neighbor v of u = Q.front(), Q.pop() \n" + "if v is not visited");

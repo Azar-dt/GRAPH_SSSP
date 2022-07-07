@@ -6,21 +6,16 @@ import com.graph.graph.algorithm.BellmanFord;
 import com.graph.graph.algorithm.Dijkstra;
 import com.graph.graph.context.Context;
 import com.graph.graph.graphcore.Graph;
-import com.graph.graph.step.Step;
 import com.graph.graph.utils.PressEnterToContinue;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private static Graph graph = new Graph();
+    private static Graph graph = null;
     private static Algorithm algorithm;
     private static Context context = new Context();
 
     public static void main(String[] args) {
-
-        // show graph
-        System.out.println(graph.toString());
         // show menu
         Scanner scanner = new Scanner(System.in);
         do {
@@ -131,7 +126,7 @@ public class Main {
                     PressEnterToContinue.run();
                     break;
                 case 2:
-                    graph = Graph.createGraph();
+                    graph = Graph.createGraphCP441();
                     System.out.println("Use example Graph successfully");
                     PressEnterToContinue.run();
                     break;
@@ -200,7 +195,7 @@ public class Main {
                     System.out.println("Enter weight: ");
                     int weight = sc.nextInt();
                     sc.nextLine();
-                    graph.addEdge(vertexName, vertexName2, weight);
+                    graph.addEdge(vertexName, vertexName2);
                     PressEnterToContinue.run();
                     break;
                 case 0:

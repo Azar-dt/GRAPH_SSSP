@@ -43,4 +43,8 @@ public class Edge implements Comparable<Edge> {
             return this.source.getId().compareTo(o.getSource().getId());
         }
     }
+
+    public Vertex[] vertices() {
+        return new Vertex[]{source, destination};
+    }
 }

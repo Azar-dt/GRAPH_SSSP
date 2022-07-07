@@ -7,6 +7,14 @@ public class Graph {
 
     private Set<Edge> edges = new TreeSet<Edge>();
 
+    public int numVertices() {
+        return vertices.size();
+    }
+
+    public int numEdges() {
+        return edges.size();
+    }
+
     public void addVertex(String id) {
         // TODO
         for (Vertex v : vertices) {
@@ -19,19 +27,49 @@ public class Graph {
         System.out.println("Vertex added");
     }
 
-    public void removeVertex(String id) {
-        // TODO
+    public void addVertex(String id, double px, double py) {
         for (Vertex v : vertices) {
             if (v.getId().equals(id)) {
+                throw new InvalidVertexException("Vertex already exist");
+            }
+        }
+        vertices.add(new Vertex(id, px, py));
+    }
+
+    public void addVertex(Vertex vertex) {
+        if (!vertices.contains(vertex)) {
+            vertices.add(vertex);
+        }
+    }
+
+    public void removeVertex(Vertex vertex) {
+        for (Vertex v : vertices) {
+            if (v.compareTo(vertex) == 0) {
+                vertices.remove(v);
+                edges.removeIf(e -> e.getSource().compareTo(v) == 0 || e.getDestination().compareTo(v) == 0);
+                return;
+            }
+        }
+    }
+
+    public void removeVertex(String id) {
+        boolean isExist = false;
+        for (Vertex v : vertices) {
+            if (v.getId().equals(id)) {
+                isExist = true;
                 vertices.remove(v);
                 System.out.println("Vertex removed");
                 return;
             }
         }
-        System.out.println("Vertex does not exist");
+        if (isExist) {
+            edges.removeIf(edge -> edge.getSource().getId().equals(id) || edge.getDestination().getId().equals(id));
+        } else {
+            System.out.println("Vertex does not exist");
+        }
     }
 
-    public void addEdge(String vertex1Id, String vertex2Id, int weight) {
+    public void addEdge(String vertex1Id, String vertex2Id) {
         // add edge to the graph
         Vertex vertex1 = null;
         Vertex vertex2 = null;
@@ -48,20 +86,44 @@ public class Graph {
             System.out.println("Vertex does not exist");
             return;
         } else {
-            edges.add(new Edge(vertex1, vertex2, weight));
-            System.out.println("Edge added");
+            edges.add(new Edge(vertex1, vertex2, 1));
+        }
+        System.out.println("Edge added");
+    }
+
+    public void changeEdgeWeight(String vertex1Id, String vertex2Id, int weight) {
+        // check if edge exists
+        Vertex vertex1 = null;
+        Vertex vertex2 = null;
+        for (Vertex v : vertices) {
+            if (v.getId().equals(vertex1Id)) {
+                vertex1 = v;
+            }
+            if (v.getId().equals(vertex2Id)) {
+                vertex2 = v;
+            }
+        }
+        if (vertex1 == null || vertex2 == null) {
+            System.out.println("Vertex does not exist");
+            return;
+        } else {
+            for (Edge e : edges) {
+                if (e.getSource().getId().equals(vertex1Id) && e.getDestination().getId().equals(vertex2Id)) {
+                    e.setWeight(weight);
+                    System.out.println("Edge weight changed");
+                    return;
+                }
+            }
         }
     }
 
-    public void addUndirectedGraphEdge(String vertex1Id, String vertex2Id, int weight) {
-        // add edge to the graph
-        addEdge(vertex1Id, vertex2Id, weight);
-        addEdge(vertex2Id, vertex1Id, weight);
-    }
-
-    public void addUnWeightedGraphEdge(String vertex1Id, String vertex2Id) {
-        // add edge to the graph
-        addEdge(vertex1Id, vertex2Id, 0);
+    public void removeEdge(Edge edge) {
+        for (Edge e : edges) {
+            if (e.compareTo(edge) == 0) {
+                edges.remove(e);
+                return;
+            }
+        }
     }
 
     public void removeEdge(String vertex1Id, String vertex2Id) {
@@ -81,21 +143,42 @@ public class Graph {
                 edges.remove(e);
                 return;
             }
+
         }
         System.out.println("Edge does not exist");
     }
 
-    public static Graph createGraph() {
+    public Collection incidentEdges(Vertex vertex) {
+        // return all incident edges of a vertex
+        Collection<Edge> incidentEdges = new ArrayList<Edge>();
+        for (Edge e : edges) {
+            if (e.getSource().getId().equals(vertex.getId()) || e.getDestination().getId().equals(vertex.getId())) {
+                incidentEdges.add(e);
+            }
+        }
+        return incidentEdges;
+    }
+
+    public static Graph createGraphCP441() {
         Graph graph = new Graph();
-        graph.addVertex("A");
-        graph.addVertex("B");
-        graph.addVertex("D");
-        graph.addVertex("C");
-        graph.addVertex("E");
-        graph.addUndirectedGraphEdge("A", "B", 1);
-        graph.addUndirectedGraphEdge("A", "C", 2);
-        graph.addUndirectedGraphEdge("B", "D", 3);
-        graph.addUndirectedGraphEdge("C", "D", 4);
+        graph.addVertex("0");
+        graph.addVertex("1");
+        graph.addVertex("2");
+        graph.addVertex("3");
+        graph.addVertex("4");
+        graph.addVertex("5");
+        graph.addVertex("6");
+        graph.addVertex("7");
+        graph.addVertex("8");
+        graph.addEdge("0", "1");
+        graph.addEdge("1", "2");
+
+        graph.addEdge("1", "3");
+        graph.addEdge("2", "3");
+        graph.addEdge("3", "4");
+
+        graph.addEdge("6", "7");
+        graph.addEdge("6", "8");
         return graph;
     }
 
@@ -150,4 +233,32 @@ public class Graph {
     public Set<Edge> getEdges() {
         return edges;
     }
+
+    public Vertex opposite(Vertex vertex, Edge edge) {
+        if (edge.getSource().getId().equals(vertex.getId())) {
+            return edge.getDestination();
+        } else {
+            return edge.getSource();
+        }
+    }
+
+    public Boolean checkVertex(String id) {
+        for (Vertex v : vertices) {
+            if (v.getId().equals(id)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Boolean checkEdge(String vertex1Id, String vertex2Id) {
+        for (Edge e : edges) {
+            if (e.getSource().getId().equals(vertex1Id) && e.getDestination().getId().equals(vertex2Id)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
+
