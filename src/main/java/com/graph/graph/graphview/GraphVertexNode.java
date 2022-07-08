@@ -1,6 +1,7 @@
 package com.graph.graph.graphview;
 
 import com.graph.graph.graphcore.Vertex;
+import com.graph.graph.step.State;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
@@ -17,8 +18,11 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
     private final Set<GraphVertexNode> adjacentVertices;
 
     private Label attachedLabel = null;
+
+    private Label detailLabel = null;
     private boolean isDragging = false;
 
+    private State.VertexState state;
     /*
     Automatic layout functionality members
      */
@@ -38,12 +42,20 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
      */
 
     public GraphVertexNode(Vertex v, double radius, boolean allowMove) {
+        this(v, radius, allowMove, null);
+    }
+
+    public GraphVertexNode(Vertex v, double radius, boolean allowMove, State.VertexState state) {
         super(v.getPositionX(), v.getPositionY(), radius);
         double x = v.getPositionX();
         double y = v.getPositionY();
+
+
         this.underlyingVertex = v;
-        this.attachedLabel = new Label(x, y, v.getId());
+//        this.attachedLabel = new Label(x, y, v.getId());
+        this.detailLabel = new Label(x, y, v.getId());
         this.isDragging = false;
+
         this.adjacentVertices = new HashSet<>();
 
         styleProxy = new StyleProxy(this);
@@ -52,6 +64,8 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
         if (allowMove) {
             enableDrag();
         }
+        this.state = state != null ? state : new State.VertexState(v, State.VERTEX_STATE.DEFAULT);
+        updateState();
     }
 
     public void setIsDragging(boolean isDragging) {
@@ -285,6 +299,12 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
         label.yProperty().bind(centerYProperty().add(getRadius() + label.getLayoutBounds().getHeight()));
     }
 
+    public void attachDetailLabel(Label label) {
+        this.detailLabel = label;
+        label.xProperty().bind(centerXProperty().subtract(label.getLayoutBounds().getWidth() / 2.0));
+        label.yProperty().bind(centerYProperty().add(getRadius() + label.getLayoutBounds().getHeight() / 4.0));
+    }
+
     @Override
     public Label getAttachedLabel() {
         return attachedLabel;
@@ -327,6 +347,72 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
         public PointVector(double x, double y) {
             this.x = x;
             this.y = y;
+        }
+    }
+
+    public void setState(State.VertexState state) {
+        if (!this.state.equals(state)) {
+            this.state = state;
+            updateState();
+        }
+    }
+
+    private void updateState() {
+        if (state == null)
+            return;
+        switch (state.getState()) {
+            case DEFAULT:
+                removeStyleClass("vertex-highlighted");
+                removeStyleClass("vertex-unqueued");
+                removeStyleClass("vertex-traversed");
+                if (attachedLabel != null) {
+                    attachedLabel.removeStyleClass("vertex-label-highlighted");
+                    attachedLabel.removeStyleClass("vertex-label-unqueued");
+                    attachedLabel.removeStyleClass("vertex-label-traversed");
+                }
+                break;
+            case HIGHLIGHTED:
+                removeStyleClass("vertex-unqueued");
+                removeStyleClass("vertex-traversed");
+                addStyleClass("vertex-highlighted");
+                if (attachedLabel != null) {
+                    attachedLabel.removeStyleClass("vertex-label-unqueued");
+                    attachedLabel.removeStyleClass("vertex-label-traversed");
+                    attachedLabel.addStyleClass("vertex-label-highlighted");
+                }
+                break;
+            case UNQUEUED:
+                removeStyleClass("vertex-highlighted");
+                removeStyleClass("vertex-traversed");
+                addStyleClass("vertex-unqueued");
+                if (attachedLabel != null) {
+                    attachedLabel.removeStyleClass("vertex-label-highlighted");
+                    attachedLabel.removeStyleClass("vertex-label-traversed");
+                    attachedLabel.addStyleClass("vertex-label-unqueued");
+                }
+                break;
+            case TRAVERSED:
+                removeStyleClass("vertex-unqueued");
+                removeStyleClass("vertex-highlighted");
+                addStyleClass("vertex-traversed");
+                if (attachedLabel != null) {
+                    attachedLabel.removeStyleClass("vertex-label-highlighted");
+                    attachedLabel.removeStyleClass("vertex-label-unqueued");
+                    attachedLabel.addStyleClass("vertex-label-traversed");
+                }
+                break;
+            case CURRENT:
+                removeStyleClass("vertex-unqueued");
+                removeStyleClass("vertex-traversed");
+                addStyleClass("vertex-current");
+                if (attachedLabel != null) {
+                    attachedLabel.removeStyleClass("vertex-label-unqueued");
+                    attachedLabel.removeStyleClass("vertex-label-traversed");
+                    attachedLabel.addStyleClass("vertex-label-highlighted");
+                }
+                break;
+            default:
+                break;
         }
     }
 }

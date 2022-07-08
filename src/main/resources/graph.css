@@ -17,6 +17,11 @@ STYLESHEET FOR JAVAFXGRAPH VISUALIZATION
     -fx-font: bold 8pt "sans-serif";
 }
 
+.vertex-id {
+    -fx-font: bold 8pt "sans-serif";
+    -fx-fill: #61B5F1;
+}
+
 .edge {
     -fx-stroke-width: 2;
     -fx-stroke: #4f4f4f;
@@ -37,18 +42,63 @@ STYLESHEET FOR JAVAFXGRAPH VISUALIZATION
     -fx-opacity: 0.8;
 }
 
-/* Custom vertex. You should revert any unwanted styling in the default element,
-   style, since custom styles will be appended to the default style */
-.myVertex {
-    -fx-stroke-width: 5;
-    -fx-stroke: green;
-    -fx-stroke-type: inside; /* you should keep this if using arrows */
-    -fx-fill: yellowgreen;
-}
-
 .pickedVertex {
     -fx-stroke-width: 3;
     -fx-stroke: red;
     -fx-stroke-type: inside; /* you should keep this if using arrows */
     -fx-fill: #B1DFF7;
+}
+
+
+.vertex-unqueued {
+    -fx-fill: #eee;
+    -fx-stroke: #ff8a27;
+}
+
+.vertex-highlighted {
+    -fx-fill: #52BC69;
+    -fx-stroke: #52BC69;
+}
+
+.vertex-traversed {
+    -fx-fill: #ff8a27;
+    -fx-stroke: #ff8a27;
+}
+
+.vertex-current {
+    -fx-fill: #ff8a27;
+    -fx-stroke: #ff8a27;
+}
+
+.edge-unqueued {
+    -fx-stroke: #ccc;
+}
+
+.edge-highlighted, .arrow-highlighted {
+    -fx-stroke: #4be60e;
+    -fx-stroke-width: 4;
+}
+
+.edge-traversed, .arrow-traversed {
+    -fx-stroke: #ff8a27;
+}
+
+.edge-label-highlighted {
+    -fx-fill: #4be60e;
+}
+
+.vertex-label-traversed, .edge-label-traversed {
+    -fx-fill: #ff8a27;
+}
+
+.vertex-label-unqueued, .edge-label-unqueued {
+    -fx-fill: #ccc;
+}
+
+.arrow-unqueued {
+    -fx-stroke: #ccc;
+}
+
+.vertex-label-highlighted {
+    -fx-fill: #fff !important;
 }

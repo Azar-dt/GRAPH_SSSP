@@ -16,37 +16,51 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.graph.graph.controllers.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="900.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.graph.graph.controllers.MainController">
     <center>
-        <SplitPane dividerPositions="0.1915367483296214, 0.8062360801781737" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <SplitPane dividerPositions="0.1915367483296214, 0.8062360801781737" prefHeight="160.0" prefWidth="200.0"
+                   BorderPane.alignment="CENTER">
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                     <children>
-                        <MenuButton fx:id="algo" layoutX="10.0" layoutY="121.0" mnemonicParsing="false" text="Choose Algorithm">
+                        <MenuButton fx:id="algo" layoutX="10.0" layoutY="121.0" mnemonicParsing="false"
+                                    text="Choose Algorithm">
                             <items>
-                                <MenuItem fx:id="bfs" mnemonicParsing="false" onAction="#setOnChooseBFS" text="BFS" />
-                                <MenuItem fx:id="dijkstra" mnemonicParsing="false" onAction="#setOnChooseDijkstra" text="Dijkstra" />
-                                <MenuItem fx:id="bellmanFord" mnemonicParsing="false" onAction="#setOnChooseBellmanFord" text="Bellman-Ford" />
+                                <MenuItem fx:id="bfs" mnemonicParsing="false" onAction="#setOnChooseBFS" text="BFS"/>
+                                <MenuItem fx:id="dijkstra" mnemonicParsing="false" onAction="#setOnChooseDijkstra"
+                                          text="Dijkstra"/>
+                                <MenuItem fx:id="bellmanFord" mnemonicParsing="false" onAction="#setOnChooseBellmanFord"
+                                          text="Bellman-Ford"/>
                             </items>
                         </MenuButton>
-                        <TextField fx:id="startVertex" layoutX="10.0" layoutY="195.0" />
-                        <Label layoutX="14.0" layoutY="166.0" text="Input start vertex" />
-                        <Button fx:id="reset" layoutX="10.0" layoutY="249.0" mnemonicParsing="false" onAction="#onResetGraph" text="Reset graph" />
-                  <MenuButton layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="ChooseExampleGraph">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                      <MenuItem mnemonicParsing="false" text="Action 2" />
-                    </items>
-                  </MenuButton>
+                        <TextField fx:id="startVertex" onKeyTyped="#onSelectStartVertex" onAction="#onSelectStartVertex"
+                                   layoutX="10.0"
+                                   layoutY="195.0"/>
+                        <Label layoutX="14.0" layoutY="166.0" text="Input start vertex"/>
+                        <Button fx:id="reset" layoutX="10.0" layoutY="508.0" mnemonicParsing="false"
+                                onAction="#onResetGraph" text="Reset graph"/>
+                        <MenuButton layoutX="10.0" layoutY="72.0" mnemonicParsing="false" text="ChooseExampleGraph">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Action 1"/>
+                                <MenuItem mnemonicParsing="false" text="Action 2"/>
+                            </items>
+                        </MenuButton>
                     </children>
                 </AnchorPane>
-                <BorderPane fx:id="graphView" prefHeight="547.0" prefWidth="455.0" />
+                <BorderPane fx:id="graphView" prefHeight="547.0" prefWidth="455.0"/>
                 <AnchorPane prefHeight="353.0" prefWidth="217.0">
                     <children>
-                        <Label layoutX="-1.0" prefHeight="25.0" prefWidth="211.0" text="Detail" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                        <Pane fx:id="detailStep" layoutX="5.0" layoutY="32.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="321.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                        <Label layoutX="6.0" layoutY="239.0" prefHeight="25.0" prefWidth="210.0" text="Label" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                        <VBox fx:id="pseudoStep" layoutX="43.0" layoutY="269.0" prefHeight="284.0" prefWidth="210.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="269.0" />
+                        <Label layoutX="-1.0" prefHeight="25.0" prefWidth="211.0" text="Detail"
+                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                        <Pane fx:id="detailStep" layoutX="5.0" layoutY="32.0" prefHeight="200.0" prefWidth="200.0"
+                              AnchorPane.bottomAnchor="321.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+                        <Label layoutX="6.0" layoutY="239.0" prefHeight="25.0" prefWidth="210.0" text="Label"
+                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+                        <VBox fx:id="pseudoStep" layoutX="43.0" layoutY="269.0" prefHeight="284.0" prefWidth="210.0"
+                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="269.0"/>
                     </children>
                 </AnchorPane>
             </items>
@@ -55,46 +69,53 @@
     <top>
         <GridPane prefHeight="51.0" prefWidth="900.0" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" GridPane.columnIndex="6">
+                <Button fx:id="playBtn" mnemonicParsing="false" onAction="#onPlayBtn" prefHeight="20.0" prefWidth="20.0"
+                        GridPane.columnIndex="6">
                     <graphic>
-                        <ImageView fx:id="playBtn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../res/play_arrow_black_48x48.png" />
-                     </image></ImageView>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../res/play_arrow_black_48x48.png"/>
+                            </image>
+                        </ImageView>
                     </graphic>
                 </Button>
-                <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" GridPane.columnIndex="5">
+                <Button fx:id="backBtn" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0"
+                        GridPane.columnIndex="5">
                     <graphic>
-                        <ImageView fx:id="backBtn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../res/arrow_back_black_96x96.png" />
-                     </image></ImageView>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../res/backward_black_4848.png"/>
+                            </image>
+                        </ImageView>
                     </graphic>
                 </Button>
-                <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" GridPane.columnIndex="7">
+                <Button fx:id="nextBtn" onAction="#stepForward" mnemonicParsing="false" prefHeight="30.0"
+                        prefWidth="30.0"
+                        GridPane.columnIndex="7">
                     <graphic>
-                        <ImageView fx:id="nextBtn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../res/right-arrow.png" />
-                     </image></ImageView>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../res/fast_forward_black_48x48.png"/>
+                            </image>
+                        </ImageView>
                     </graphic>
                 </Button>
             </children>

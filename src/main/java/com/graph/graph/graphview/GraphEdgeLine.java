@@ -1,6 +1,7 @@
 package com.graph.graph.graphview;
 
 import com.graph.graph.graphcore.Edge;
+import com.graph.graph.step.State;
 import com.graph.graph.utils.UtilitiesBindings;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
@@ -12,16 +13,21 @@ public class GraphEdgeLine extends Line implements GraphEdgeBase {
 
     private final Edge underlyingEdge;
 
+    private State.EdgeState state;
+
     private final GraphVertexNode inbound;
     private final GraphVertexNode outbound;
-
     private Label attachedLabel = null;
     private Arrow attachedArrow = null;
 
     /* Styling proxy */
     private final StyleProxy styleProxy;
 
-    public GraphEdgeLine(Edge edge, GraphVertexNode inbound, GraphVertexNode outbound) {
+    public GraphEdgeLine(Edge e, GraphVertexNode inbound, GraphVertexNode outbound) {
+        this(e, inbound, outbound, null);
+    }
+
+    public GraphEdgeLine(Edge edge, GraphVertexNode inbound, GraphVertexNode outbound, State.EdgeState state) {
         if (inbound == null || outbound == null) {
             throw new IllegalArgumentException("Cannot connect null vertices.");
         }
@@ -46,6 +52,9 @@ public class GraphEdgeLine extends Line implements GraphEdgeBase {
         setOnMouseExited((MouseEvent event) -> {
             getScene().setCursor(Cursor.DEFAULT);
         });
+
+        this.state = state == null ? new State.EdgeState(edge, State.EDGE_STATE.DEFAULT) : state;
+        updateState();
     }
 
     @Override
@@ -152,4 +161,81 @@ public class GraphEdgeLine extends Line implements GraphEdgeBase {
         return this.attachedLabel;
     }
 
+    @Override
+    public void setState(State.EdgeState state) {
+        if (!this.state.equals(state)) {
+            this.state = state;
+            updateState();
+        }
+    }
+
+    private void updateState() {
+        if (state == null)
+            return;
+
+        switch (state.getState()) {
+            case DEFAULT:
+                removeStyleClass("edge-unqueued");
+                removeStyleClass("edge-highlighted");
+                removeStyleClass("edge-traversed");
+                if (attachedLabel != null) {
+                    attachedLabel.removeStyleClass("edge-label-highlighted");
+                    attachedLabel.removeStyleClass("edge-label-unqueued");
+                    attachedLabel.removeStyleClass("edge-label-traversed");
+                }
+                if (attachedArrow != null) {
+                    attachedArrow.removeStyleClass("arrow-highlighted");
+                    attachedArrow.removeStyleClass("arrow-unqueued");
+                    attachedArrow.removeStyleClass("arrow-traversed");
+                }
+                break;
+            case UNQUEUED:
+                removeStyleClass("edge-highlighted");
+                removeStyleClass("edge-traversed");
+                addStyleClass("edge-unqueued");
+                if (attachedLabel != null) {
+                    attachedLabel.removeStyleClass("edge-label-highlighted");
+                    attachedLabel.removeStyleClass("edge-label-traversed");
+                    attachedLabel.addStyleClass("edge-label-unqueued");
+                }
+                if (attachedArrow != null) {
+                    attachedArrow.removeStyleClass("arrow-highlighted");
+                    attachedArrow.removeStyleClass("arrow-unqueued");
+                    attachedArrow.addStyleClass("arrow-unqueued");
+                }
+                break;
+            case HIGHLIGHTED:
+                removeStyleClass("edge-unqueued");
+                removeStyleClass("edge-traversed");
+                addStyleClass("edge-highlighted");
+                if (attachedLabel != null) {
+                    attachedLabel.removeStyleClass("edge-label-unqueued");
+                    attachedLabel.removeStyleClass("edge-label-traversed");
+                    attachedLabel.addStyleClass("edge-label-highlighted");
+                }
+                if (attachedArrow != null) {
+                    attachedArrow.removeStyleClass("arrow-traversed");
+                    attachedArrow.removeStyleClass("arrow-unqueued");
+                    attachedArrow.addStyleClass("arrow-highlighted");
+                }
+                break;
+            case TRAVERSED:
+                removeStyleClass("edge-unqueued");
+                removeStyleClass("edge-highlighted");
+                addStyleClass("edge-traversed");
+                if (attachedLabel != null) {
+                    attachedLabel.removeStyleClass("edge-label-highlighted");
+                    attachedLabel.removeStyleClass("edge-label-unqueued");
+                    attachedLabel.addStyleClass("edge-label-traversed");
+                }
+                if (attachedArrow != null) {
+                    attachedArrow.removeStyleClass("arrow-unqueued");
+                    attachedArrow.removeStyleClass("arrow-highlighted");
+                    attachedArrow.addStyleClass("arrow-traversed");
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }

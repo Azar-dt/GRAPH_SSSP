@@ -1,5 +1,7 @@
 package com.graph.graph.graphview;
 
+import com.graph.graph.step.State;
+
 public interface GraphEdgeBase extends GraphEdge, LabelledNode {
 
     /**
@@ -16,4 +18,5 @@ public interface GraphEdgeBase extends GraphEdge, LabelledNode {
      */
     public Arrow getAttachedArrow();
 
+    void setState(State.EdgeState state);
 }

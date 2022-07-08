@@ -207,6 +207,15 @@ public class Graph {
         return null;
     }
 
+    public Edge getEdge(Vertex source, Vertex destination) {
+        for (Edge e : edges) {
+            if (e.getSource().getId().equals(source.getId()) && e.getDestination().getId().equals(destination.getId())) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     public Edge getEdge(String vertex1Id, String vertex2Id) {
         for (Edge e : edges) {
             if (e.getSource().getId().equals(vertex1Id) && e.getDestination().getId().equals(vertex2Id)) {

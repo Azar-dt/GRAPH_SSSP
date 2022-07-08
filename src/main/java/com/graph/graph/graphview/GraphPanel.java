@@ -3,6 +3,7 @@ package com.graph.graph.graphview;
 import com.graph.graph.graphcore.Edge;
 import com.graph.graph.graphcore.Graph;
 import com.graph.graph.graphcore.Vertex;
+import com.graph.graph.step.State;
 import com.graph.graph.utils.UtilitiesPoint2D;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -49,7 +50,7 @@ public class GraphPanel extends Pane {
     private boolean initialized = false;
     private final boolean edgesWithArrows;
 
-    private boolean isDragging = false;
+    private State state;
 
     /*
     INTERACTION WITH VERTICES AND EDGES
@@ -79,7 +80,7 @@ public class GraphPanel extends Pane {
      * @see Graph
      */
     public GraphPanel(Graph theGraph) {
-        this(theGraph, new GraphProperties(), null);
+        this(theGraph, new GraphProperties(), null, null);
     }
 
 
@@ -93,7 +94,7 @@ public class GraphPanel extends Pane {
      */
     public GraphPanel(Graph theGraph, GraphProperties properties) {
 
-        this(theGraph, properties, null);
+        this(theGraph, properties, null, null);
     }
 
     /**
@@ -105,7 +106,7 @@ public class GraphPanel extends Pane {
      * @param properties custom properties, null for default
      * @param cssFile    alternative css file, instead of default 'graph.css'
      */
-    public GraphPanel(Graph theGraph, GraphProperties properties, URI cssFile) {
+    public GraphPanel(Graph theGraph, GraphProperties properties, URI cssFile, State state) {
 
         if (theGraph == null) {
             throw new IllegalArgumentException("The graph cannot be null.");
@@ -123,6 +124,7 @@ public class GraphPanel extends Pane {
         edgeNodes = new HashMap<>();
         connections = new HashMap<>();
 
+        this.state = state == null ? createDefaultState() : state;
         //set stylesheet and class
         loadStylesheet(cssFile);
 
@@ -147,6 +149,12 @@ public class GraphPanel extends Pane {
             }
         });
 
+    }
+
+    private State createDefaultState() {
+        List<Vertex> vertices = new ArrayList<>(theGraph.getVertices());
+        List<Edge> edges = new ArrayList<>(theGraph.getEdges());
+        return new State(vertices, edges);
     }
 
     private synchronized void runLayoutIteration() {
@@ -401,7 +409,7 @@ public class GraphPanel extends Pane {
         if (graphProperties.getUseVertexLabel()) {
             Label label = new Label(labelText);
 
-            label.addStyleClass("vertex-label");
+            label.addStyleClass("vertex-id");
             this.getChildren().add(label);
             v.attachLabel(label);
         }
@@ -985,15 +993,15 @@ public class GraphPanel extends Pane {
     private void enableMouseListener() {
         setOnMouseClicked((MouseEvent mouseEvent) -> {
             if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                System.out.println(mouseEvent);
+//                System.out.println(mouseEvent);
                 if (mouseEvent.getClickCount() == 2) {
                     //no need to continue otherwise
-//                    if (vertexClickConsumer == null && edgeClickConsumer == null) {
-//                        return;
-//                    }
+                    if (vertexClickConsumer == null && edgeClickConsumer == null) {
+                        return;
+                    }
 
                     Node node = pick(GraphPanel.this, mouseEvent.getX(), mouseEvent.getY());
-                    System.out.println(node);
+//                    System.out.println(node);
 
                     if (node instanceof GraphVertex) {
                         GraphVertex v = (GraphVertex) node;
@@ -1003,13 +1011,13 @@ public class GraphPanel extends Pane {
                         edgeClickConsumer.accept(e);
                     } else {
                         theGraph.addVertex((theGraph.numVertices() + 1) + "", mouseEvent.getX(), mouseEvent.getY());
-                        System.out.println("Added vertex");
+//                        System.out.println("Added vertex");
                         updateNodes();
                     }
                 }
 
                 if (mouseEvent.isAltDown() && mouseEvent.getClickCount() == 1) {
-                    System.out.println("Alt down");
+//                    System.out.println("Alt down");
                     Node node = pick(GraphPanel.this, mouseEvent.getX(), mouseEvent.getY());
                     if (node == null) {
                         return;
@@ -1031,7 +1039,7 @@ public class GraphPanel extends Pane {
                     if (node instanceof GraphVertex) {
                         GraphVertex v = (GraphVertex) node;
                         theGraph.removeVertex(v.getUnderlyingVertex());
-                        System.out.println(theGraph.toString());
+//                        System.out.println(theGraph.toString());
                         updateNodes();
                     } else if (node instanceof GraphEdge) {
                         GraphEdge e = (GraphEdge) node;
@@ -1041,6 +1049,38 @@ public class GraphPanel extends Pane {
                 }
             }
         });
+    }
+
+    public void setState(State state) {
+        this.state = state;
+        updateState();
+    }
+
+    private void updateState() {
+        Map<Vertex, State.VertexState> vertexStateMap = state.getVertexStateMap();
+        Map<Edge, State.EdgeState> edgeStateMap = state.getEdgeStateMap();
+
+        for (Vertex v : vertexStateMap.keySet()) {
+            GraphVertexNode vv = vertexNodes.get(v);
+            if (vv == null)
+                continue;
+
+            State.VertexState state = vertexStateMap.get(v);
+            vv.setState(state);
+        }
+
+        for (Edge e : edgeStateMap.keySet()) {
+            GraphEdgeBase ev = edgeNodes.get(e);
+            if (ev == null)
+                continue;
+
+            State.EdgeState state = edgeStateMap.get(e);
+            ev.setState(state);
+        }
+    }
+
+    public void setDefaultState() {
+        this.state = createDefaultState();
     }
 
     /**
