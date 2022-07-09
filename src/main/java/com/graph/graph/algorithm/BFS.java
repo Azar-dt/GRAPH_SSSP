@@ -16,8 +16,10 @@ public class BFS extends Algorithm {
         pseudoStep.clear();
         pseudoStep.put(0, "initSSSP, Q.push(sourceVertex)");
         pseudoStep.put(1, "while Q is not empty // Q is normal queue");
-        pseudoStep.put(2, "for each neighbor v of u = Q.front(), Q.pop() \n" + "if v is not visited");
-        pseudoStep.put(3, "parent(v) = u, visited(v) = true, Q.push(v), save distance\n");
+        pseudoStep.put(2, "u = Q.front(), Q.pop() ");
+        pseudoStep.put(3, "for each neighbor v of u \n" + "if v is not visited");
+        pseudoStep.put(4, "parent(v) = u, visited(v) = true, Q.push(v), save distance\n");
+        pseudoStep.put(5, "End of BFS");
     }
 
     @Override
@@ -37,6 +39,7 @@ public class BFS extends Algorithm {
         List<Vertex> verticesTraversed = new LinkedList<>();
         List<Edge> edgesTraversed = new LinkedList<>();
         List<Vertex> vertexQueued = new LinkedList<>();
+        List<Edge> uselessEdges = new LinkedList<>();
         List<Vertex> vertexList = new ArrayList<>(graph.getVertices());
         List<Edge> edgeList = new ArrayList<>(graph.getEdges());
         State state; // save state of vertex and edge
@@ -48,9 +51,9 @@ public class BFS extends Algorithm {
         distance.put(startVertex, currentDistance);
 
         // step 0
-        verticesHighlighted.add(startVertex);
+        vertexQueued.add(startVertex);
         description = "0 is the source vertex.\n" + "Set parent[v] = -1, d[" + startVertex.getId() + "] = 0 and push this vertex to queue.";
-        state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, startVertex);
+        state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges);
         stepList.add(new Step(0, description, state));
         // done step 0
 
@@ -60,19 +63,22 @@ public class BFS extends Algorithm {
         while (queue.size() > 0) {
             currentDistance++;
 
-            Vertex vertex = queue.remove();
-            verticesHighlighted.add(vertex);
-            verticesTraversed.add(vertex);
-            vertexQueued.remove(vertex);
 
             StringBuilder sb = new StringBuilder();
             for (Vertex v : queue) {
                 sb.append(v.getId() + " ");
             }
             description = "The queue is : { " + sb.toString() + "}";
-            state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, vertex);
+            state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges);
             stepList.add(new Step(1, description, state));
 
+            Vertex vertex = queue.remove();
+            verticesHighlighted.add(vertex);
+            verticesTraversed.add(vertex);
+            vertexQueued.remove(vertex);
+            description = "Current Vertex is " + vertex.getId();
+            state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges);
+            stepList.add(new Step(2, description, state));
 
             Set<Vertex> neighbors = graph.getNeighbors(vertex.getId());
             for (Vertex v : neighbors) {
@@ -89,8 +95,8 @@ public class BFS extends Algorithm {
 
                 Edge currentEdge = graph.getEdge(vertex.getId(), v.getId());
                 edgesHighlighted.add(currentEdge);
-                state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, vertex);
-                stepList.add(new Step(2, description, state));
+                state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges);
+                stepList.add(new Step(3, description, state));
                 edgesTraversed.add(currentEdge);
                 if (!visited.containsKey(v)) {
                     parent.put(v, vertex); // save the parent of v
@@ -101,19 +107,20 @@ public class BFS extends Algorithm {
                     edgesHighlighted.remove(currentEdge);
                     vertexQueued.add(v);
 //                    verticesTraversed.add(v);
-                    state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, vertex);
-                    stepList.add(new Step(3, description, state));
+                    state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges);
+                    stepList.add(new Step(4, description, state));
                 } else {
                     description = "The vertex " + v.getId() + " is already visited.\n";
                     edgesHighlighted.remove(currentEdge);
-                    state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, vertex);
+                    uselessEdges.add(currentEdge);
+                    state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges);
                     stepList.add(new Step(3, description, state));
                 }
             }
             verticesHighlighted.remove(vertex);
         }
-        state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, null);
-        stepList.add(new Step(4, "End of BFS", state));
+        state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges);
+        stepList.add(new Step(5, "End of BFS", state));
     }
 
     @Override

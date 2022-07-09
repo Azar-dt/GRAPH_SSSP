@@ -401,16 +401,6 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
                     attachedLabel.addStyleClass("vertex-label-traversed");
                 }
                 break;
-            case CURRENT:
-                removeStyleClass("vertex-unqueued");
-                removeStyleClass("vertex-traversed");
-                addStyleClass("vertex-current");
-                if (attachedLabel != null) {
-                    attachedLabel.removeStyleClass("vertex-label-unqueued");
-                    attachedLabel.removeStyleClass("vertex-label-traversed");
-                    attachedLabel.addStyleClass("vertex-label-highlighted");
-                }
-                break;
             default:
                 break;
         }

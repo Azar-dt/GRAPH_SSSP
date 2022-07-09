@@ -159,26 +159,26 @@ public class Graph {
         return incidentEdges;
     }
 
-    public static Graph createGraphCP441() {
+    public static Graph createGraphCP443DU() {
         Graph graph = new Graph();
-        graph.addVertex("0");
-        graph.addVertex("1");
-        graph.addVertex("2");
-        graph.addVertex("3");
-        graph.addVertex("4");
-        graph.addVertex("5");
-        graph.addVertex("6");
-        graph.addVertex("7");
-        graph.addVertex("8");
+        graph.addVertex("0", 100, 100);
+        graph.addVertex("1", 200, 100);
+        graph.addVertex("2", 200, 200);
+        graph.addVertex("3", 300, 100);
+        graph.addVertex("4", 400, 100);
+        graph.addVertex("5", 500, 100);
+        graph.addVertex("6", 300, 200);
+        graph.addVertex("7", 400, 200);
         graph.addEdge("0", "1");
-        graph.addEdge("1", "2");
+        graph.addEdge("0", "2");
 
         graph.addEdge("1", "3");
+        graph.addEdge("1", "2");
         graph.addEdge("2", "3");
-        graph.addEdge("3", "4");
+        graph.addEdge("2", "5");
 
-        graph.addEdge("6", "7");
-        graph.addEdge("6", "8");
+        graph.addEdge("3", "4");
+        graph.addEdge("7", "6");
         return graph;
     }
 

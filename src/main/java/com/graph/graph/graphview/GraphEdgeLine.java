@@ -189,14 +189,14 @@ public class GraphEdgeLine extends Line implements GraphEdgeBase {
                     attachedArrow.removeStyleClass("arrow-traversed");
                 }
                 break;
-            case UNQUEUED:
+            case USELESS:
                 removeStyleClass("edge-highlighted");
                 removeStyleClass("edge-traversed");
-                addStyleClass("edge-unqueued");
+                addStyleClass("edge-useless");
                 if (attachedLabel != null) {
                     attachedLabel.removeStyleClass("edge-label-highlighted");
                     attachedLabel.removeStyleClass("edge-label-traversed");
-                    attachedLabel.addStyleClass("edge-label-unqueued");
+                    attachedLabel.addStyleClass("edge-label-useless");
                 }
                 if (attachedArrow != null) {
                     attachedArrow.removeStyleClass("arrow-highlighted");

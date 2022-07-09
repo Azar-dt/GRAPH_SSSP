@@ -126,7 +126,7 @@ public class Main {
                     PressEnterToContinue.run();
                     break;
                 case 2:
-                    graph = Graph.createGraphCP441();
+                    graph = Graph.createGraphCP443DU();
                     System.out.println("Use example Graph successfully");
                     PressEnterToContinue.run();
                     break;

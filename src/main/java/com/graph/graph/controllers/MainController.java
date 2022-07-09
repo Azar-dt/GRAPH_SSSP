@@ -13,14 +13,19 @@ import com.graph.graph.step.Step;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainController {
@@ -47,6 +52,17 @@ public class MainController {
     public VBox pseudoStep;
     @FXML
     public MenuButton algo;
+    @FXML
+    public Button playBtn;
+    @FXML
+    public Button pauseBtn;
+    @FXML
+    public Label detailShow;
+    @FXML
+    public MenuButton exampleGraph;
+    @FXML
+    public MenuItem graph1;
+
 
     private GraphPanel graphPanel;
     private Graph graph = new Graph();
@@ -55,6 +71,8 @@ public class MainController {
 
     List<Step> stepList = new ArrayList<>();
 
+    private HashMap<Integer, String> pseudoStepMap;
+    private HashMap<Integer, Label> pseudoStepLabelMap;
     private SequentialTransition sequentialTransition;
 
     private int currentIteration = NO_ITERATION, maxIteration = 0, animationStatus = ANIMATION_STOP;
@@ -64,15 +82,45 @@ public class MainController {
 
     @FXML
     private void initialize() {
-        graph.addVertex("A", 100, 100);
-        graphPanel = new GraphPanel(graph);
-        graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
-//        graphPanel.setStyle("-fx-background-color: #000;");
-        bindingConsumer();
+//        graphPanel = new GraphPanel(graph);
+//        graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
+////        graphPanel.setStyle("-fx-background-color: #000;");
+//        bindingConsumer();
+        initGraphPanel();
         Platform.runLater(() -> {
             graphPanel.init(); //init graph after scene is created
         });
+        for (MenuItem item : algo.getItems()) {
+            item.setOnAction((ActionEvent event) -> {
+                if (item.getText().equals("BFS")) {
+                    algorithm = new BFS();
+                    algo.setText("BFS");
+                } else if (item.getText().equals("Dijkstra")) {
+                    algorithm = new Dijkstra();
+                    algo.setText("Dijkstra");
+                } else if (item.getText().equals("Bellman-Ford")) {
+                    algorithm = new BellmanFord();
+                    algo.setText("Bellman-Ford");
+                }
+                initPseudoStep();
+            });
+        }
 
+        for (MenuItem item : exampleGraph.getItems()) {
+            item.setOnAction((ActionEvent event) -> {
+                if (item.getText().equals(graph1.getText())) {
+                    graph = Graph.createGraphCP443DU();
+                    initGraphPanel();
+                }
+            });
+        }
+    }
+
+    private void initGraphPanel() {
+        graphPanel = new GraphPanel(graph);
+        graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
+//        graphPanel.init();
+        bindingConsumer();
     }
 
     private void bindingConsumer() {
@@ -109,24 +157,6 @@ public class MainController {
         });
     }
 
-    public void setOnChooseBFS() {
-        algo.setText("BFS");
-        algorithm = new BFS();
-        algorithm.setGraph(graph);
-    }
-
-    public void setOnChooseDijkstra() {
-        algo.setText("Dijkstra");
-        algorithm = new Dijkstra();
-        algorithm.setGraph(graph);
-    }
-
-    public void setOnChooseBellmanFord() {
-        algo.setText("Bellman Ford");
-        algorithm = new BellmanFord();
-        algorithm.setGraph(graph);
-    }
-
     public void onSelectStartVertex() {
         if (algorithm == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -140,6 +170,7 @@ public class MainController {
         if (startVertexId.isEmpty()) {
             return;
         }
+        algorithm.setGraph(graph);
         algorithm.setStartVertex(graph.getVertex(startVertexId));
         graphPanel.setDefaultState();
     }
@@ -148,6 +179,12 @@ public class MainController {
         graph = new Graph();
         graphPanel = new GraphPanel(graph);
         bindingConsumer();
+        isPlaying = false;
+        isPaused = false;
+        algorithm = null; //reset algorithm
+        algo.setText("Choose Algorithm");
+        startVertex.clear();
+        currentIteration = NO_ITERATION;
 //        graphPanel.setState(stepList.get(0).getState());
         graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
     }
@@ -161,6 +198,39 @@ public class MainController {
             return;
         }
         runAlgorithm();
+    }
+
+    public void onPauseBtn() {
+        if (isPlaying) {
+            pause();
+        }
+    }
+
+    public void onNextBtn() {
+        stepForward();
+    }
+
+    public void onBackBtn() {
+        stepBackward();
+    }
+
+    public void onGoToBegin() {
+        goToBegin();
+    }
+
+    public void onGoToEnd() {
+        goToEnd();
+    }
+
+    private void initPseudoStep() {
+        pseudoStepMap = algorithm.getPseudoStep();
+        pseudoStep.getChildren().clear();
+        pseudoStepLabelMap = new HashMap<>();
+        for (int i = 0; i < pseudoStepMap.size(); i++) {
+            Label label = new Label(pseudoStepMap.get(i));
+            pseudoStepLabelMap.put(i, label);
+            pseudoStep.getChildren().add(label);
+        }
     }
 
     public void runAlgorithm() {
@@ -178,14 +248,22 @@ public class MainController {
         play();
     }
 
+    private void pause() {
+        isPaused = true;
+        animationStatus = ANIMATION_PAUSE;
+        sequentialTransition.stop();
+        pauseBtn.setVisible(false);
+        playBtn.setVisible(true);
+    }
+
     private synchronized void play() {
         if (isPlaying) {
             isPaused = false;
             if (currentIteration < 0)
                 currentIteration = 0;
-//            playBtn.setVisible(false);
+            playBtn.setVisible(false);
 //            replayBtn.setVisible(false);
-//            pauseBtn.setVisible(true);
+            pauseBtn.setVisible(true);
 
             sequentialTransition = new SequentialTransition();
             if (animationStatus == ANIMATION_STOP) {
@@ -241,7 +319,35 @@ public class MainController {
         updateDisplay(stepList.get(currentIteration));
     }
 
-    public void stepForward() {
+    private void previous() {
+        if (currentIteration >= maxIteration)
+            currentIteration = maxIteration - 1;
+        currentIteration--;
+        if (currentIteration < 0)
+            return;
+        updateDisplay(stepList.get(currentIteration));
+    }
+
+    private void stepBackward() {
+        if (isPlaying) {
+            if (!isPaused) {
+                sequentialTransition.stop();
+                previous();
+                if (pauseControl == null) {
+                    pauseControl = new PauseTransition(Duration.millis(animationDuration));
+                    pauseControl.setOnFinished(e -> {
+                        play();
+                        pauseControl = null;
+                    });
+                    pauseControl.play();
+                }
+            } else {
+                previous();
+            }
+        }
+    }
+
+    private void stepForward() {
         if (isPlaying) {
             if (!isPaused) {
                 sequentialTransition.stop();
@@ -260,13 +366,52 @@ public class MainController {
         }
     }
 
+    private void jumpToIteration(int iteration) {
+        if (isPaused == false)
+            sequentialTransition.stop();
+        currentIteration = iteration;
+        if (currentIteration >= maxIteration) {
+            currentIteration = maxIteration - 1;
+        }
+        if (currentIteration < 0)
+            currentIteration = 0;
+        updateDisplay(stepList.get(currentIteration));
+    }
+
+    private void goToBegin() {
+        pause();
+        jumpToIteration(0);
+    }
+
+    private void goToEnd() {
+        pause();
+        jumpToIteration(maxIteration - 1);
+    }
+
+
     public void updateDisplay(Step step) {
         updateGraphDisplay(step.getState());
-//        updateDetailCodeDisplay(step.getStatus());
-//        highlightPseudoCode(step.getLineNo());
+        updateDetailCodeDisplay(step.getDescription());
+        highlightPseudoCode(step.getId());
     }
 
     private void updateGraphDisplay(State state) {
         graphPanel.setState(state);
+    }
+
+    private void updateDetailCodeDisplay(String detail) {
+        detailShow.setText(detail);
+    }
+
+    public void highlightPseudoCode(int lineNo) {
+        resetPseudoCodeCss();
+        pseudoStepLabelMap.get(lineNo).setStyle("-fx-font-size: 14;-fx-word-wrap: break-word;-fx-font-weight: bold; -fx-background-color: #333; -fx-text-fill: #eee;");
+
+    }
+
+    private void resetPseudoCodeCss() {
+        for (Label label : pseudoStepLabelMap.values()) {
+            label.setStyle("-fx-font-size: 14;-fx-word-wrap: break-word;");
+        }
     }
 }

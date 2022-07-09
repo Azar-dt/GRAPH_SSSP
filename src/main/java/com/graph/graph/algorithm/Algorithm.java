@@ -25,6 +25,14 @@ public abstract class Algorithm {
 
     public abstract void showStep();
 
+    public HashMap<Integer, String> getPseudoStep() {
+        return pseudoStep;
+    }
+
+    public void setPseudoStep(HashMap<Integer, String> pseudoStep) {
+        this.pseudoStep = pseudoStep;
+    }
+
     public Graph getGraph() {
         return graph;
     }

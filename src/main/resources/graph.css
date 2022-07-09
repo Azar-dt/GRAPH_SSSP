@@ -70,12 +70,12 @@ STYLESHEET FOR JAVAFXGRAPH VISUALIZATION
     -fx-stroke: #ff8a27;
 }
 
-.edge-unqueued {
+.edge-useless {
     -fx-stroke: #ccc;
 }
 
 .edge-highlighted, .arrow-highlighted {
-    -fx-stroke: #4be60e;
+    -fx-stroke: #52BC69;
     -fx-stroke-width: 4;
 }
 
@@ -91,7 +91,7 @@ STYLESHEET FOR JAVAFXGRAPH VISUALIZATION
     -fx-fill: #ff8a27;
 }
 
-.vertex-label-unqueued, .edge-label-unqueued {
+.vertex-label-unqueued, .edge-label-useless {
     -fx-fill: #ccc;
 }
 
@@ -100,5 +100,5 @@ STYLESHEET FOR JAVAFXGRAPH VISUALIZATION
 }
 
 .vertex-label-highlighted {
-    -fx-fill: #fff !important;
+    -fx-fill: #52BC69 !important;
 }

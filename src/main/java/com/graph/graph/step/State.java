@@ -12,7 +12,7 @@ public class State {
     private Map<Vertex, VertexState> vertexStateMap;
     private Map<Edge, EdgeState> edgeStateMap;
 
-    public State(List<Vertex> vertexList, List<Edge> edgeList, List<Vertex> vertexHighlighted, List<Edge> edgeHighlighted, List<Vertex> vertexTraversed, List<Edge> edgeTraversed, List<Vertex> vertexQueued, Vertex currentVertex) {
+    public State(List<Vertex> vertexList, List<Edge> edgeList, List<Vertex> vertexHighlighted, List<Edge> edgeHighlighted, List<Vertex> vertexTraversed, List<Edge> edgeTraversed, List<Vertex> vertexQueued, List<Edge> uselessEdges) {
         vertexStateMap = new HashMap<Vertex, VertexState>();
         edgeStateMap = new HashMap<Edge, EdgeState>();
 
@@ -52,9 +52,12 @@ public class State {
                 edgeStateMap.get(e).setState(EDGE_STATE.HIGHLIGHTED);
             }
         }
-//        if (currentVertex != null) {
-//            vertexStateMap.get(currentVertex).setState(VERTEX_STATE.CURRENT);
-//        }
+
+        if (uselessEdges != null) {
+            for (Edge e : uselessEdges) {
+                edgeStateMap.get(e).setState(EDGE_STATE.USELESS);
+            }
+        }
     }
 
     public State(List<Vertex> vertexList, List<Edge> edgeList) {
@@ -163,16 +166,15 @@ public class State {
         DEFAULT, // default state
         HIGHLIGHTED, // highlighted state
         TRAVERSED, // traversed state
-        UNQUEUED, // queued state
+        UNQUEUED // queued state
 
-        CURRENT // current vertex
     }
 
     public static enum EDGE_STATE {
         DEFAULT, // default state
         HIGHLIGHTED, // highlighted state
         TRAVERSED, // traversed state
-        UNQUEUED, // queued state
+        USELESS, // queued state
 
     }
 
