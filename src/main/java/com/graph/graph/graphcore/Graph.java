@@ -152,7 +152,9 @@ public class Graph {
         // return all incident edges of a vertex
         Collection<Edge> incidentEdges = new ArrayList<Edge>();
         for (Edge e : edges) {
-            if (e.getSource().getId().equals(vertex.getId()) || e.getDestination().getId().equals(vertex.getId())) {
+            if (
+//                    e.getSource().getId().equals(vertex.getId())
+                    e.getDestination().getId().equals(vertex.getId())) {
                 incidentEdges.add(e);
             }
         }

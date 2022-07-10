@@ -6,6 +6,7 @@ import com.graph.graph.algorithm.BellmanFord;
 import com.graph.graph.algorithm.Dijkstra;
 import com.graph.graph.containers.SmartGraphDemoContainer;
 import com.graph.graph.graphcore.Graph;
+import com.graph.graph.graphcore.Vertex;
 import com.graph.graph.graphview.GraphPanel;
 import com.graph.graph.graphview.GraphVertex;
 import com.graph.graph.step.State;
@@ -13,6 +14,8 @@ import com.graph.graph.step.Step;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -22,6 +25,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -62,6 +66,14 @@ public class MainController {
     public MenuButton exampleGraph;
     @FXML
     public MenuItem graph1;
+    @FXML
+    public Slider progressSlider;
+    @FXML
+    public Rectangle progressRec;
+    @FXML
+    public Slider speedControl;
+    @FXML
+    public Label speedLabel;
 
 
     private GraphPanel graphPanel;
@@ -82,14 +94,12 @@ public class MainController {
 
     @FXML
     private void initialize() {
-//        graphPanel = new GraphPanel(graph);
-//        graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
-////        graphPanel.setStyle("-fx-background-color: #000;");
-//        bindingConsumer();
         initGraphPanel();
         Platform.runLater(() -> {
             graphPanel.init(); //init graph after scene is created
         });
+        setupSpeedControl();
+        setupProgressShow();
         for (MenuItem item : algo.getItems()) {
             item.setOnAction((ActionEvent event) -> {
                 if (item.getText().equals("BFS")) {
@@ -119,7 +129,6 @@ public class MainController {
     private void initGraphPanel() {
         graphPanel = new GraphPanel(graph);
         graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
-//        graphPanel.init();
         bindingConsumer();
     }
 
@@ -142,9 +151,6 @@ public class MainController {
             System.out.println("Vertex contains element: " + graphVertex.getUnderlyingVertex().getId());
 
             graphVertex.addStyleClass("myVertex");
-            //want fun? uncomment below with automatic layout
-//            g.removeVertex(graphVertex.getUnderlyingVertex().getId());
-//            graphPanel.update();
         });
 
         graphPanel.setEdgeDoubleClickAction(graphEdge -> {
@@ -154,6 +160,102 @@ public class MainController {
 
             graphEdge.getStylableArrow().setStyle("-fx-stroke: black; -fx-stroke-width: 3;");
 
+        });
+    }
+
+    private void setupSpeedControl() {
+        StringProperty speedLabelProperty = new SimpleStringProperty("");
+        speedLabel.textProperty().bind(speedLabelProperty.concat(speedControl.valueProperty().asString()).concat("x"));
+
+        speedControl.valueProperty().addListener((ov, oldValue, newValue) -> {
+            double doubleValue = newValue.doubleValue();
+            if (doubleValue >= 0.5 && doubleValue < 0.625) {
+                doubleValue = 0.5;
+            } else if (doubleValue >= 0.625 && doubleValue < 0.875) {
+                doubleValue = 0.75;
+            } else if (doubleValue >= 0.875 && doubleValue < 1.125) {
+                doubleValue = 1;
+            } else if (doubleValue >= 1.125 && doubleValue < 1.375) {
+                doubleValue = 1.25;
+            } else
+                doubleValue = 1.5;
+
+//            doubleValue = boundValue(doubleValue, speedControl.getMin(), speedControl.getMax());
+            speedControl.setValue(doubleValue);
+            animationDuration = (int) (DEFAULT_DURATION / speedControl.getValue());
+            if (isPlaying && !isPaused) {
+                pause();
+                if (pauseControl == null) {
+                    pauseControl = new PauseTransition(Duration.millis(animationDuration));
+                    pauseControl.setOnFinished(ev -> {
+                        play();
+                        pauseControl = null;
+                    });
+                    pauseControl.play();
+                }
+            }
+        });
+    }
+
+    private void setupProgressShow() {
+        progressSlider.setPrefWidth(200);
+        progressSlider.setBlockIncrement(1);
+//        progressSlider.maxProperty().bind();
+//        progressRec.heightProperty().bind(progressSlider.heightProperty().subtract(2));
+//        progressRec.widthProperty().bind(progressSlider.widthProperty());
+
+        progressSlider.valueProperty().addListener((ov, oldValue, newValue) -> {
+            int value = Math.round(newValue.floatValue());
+            int percent = maxIteration == 0 ? 0 : Math.round((value * 100) / (maxIteration - 1));
+//            String style = String.format("-fx-fill: linear-gradient(to right, #2D819D %d%%, #ccc %d%%);", percent, percent);
+//            progressRec.setStyle(style);
+            String style = String.format("-fx-background-color: linear-gradient(to right, #2D819D %d%%, #969696 %d%%);", newValue.intValue(), newValue.intValue());
+            progressSlider.setValue(value);
+        });
+
+        progressSlider.setOnMousePressed(e -> {
+            if (isPlaying && e.isPrimaryButtonDown()) {
+                if (!isPaused) {
+                    sequentialTransition.stop();
+                    jumpToIteration((int) (progressSlider.getValue()));
+                    if (pauseControl == null) {
+                        pauseControl = new PauseTransition(Duration.millis(animationDuration));
+                        pauseControl.setOnFinished(ev -> {
+                            play();
+                            pauseControl = null;
+                        });
+                        pauseControl.play();
+                    }
+                } else {
+                    jumpToIteration((int) (progressSlider.getValue()));
+                }
+            }
+        });
+
+        progressSlider.setOnMouseDragged(e -> {
+            if (isPlaying && e.isPrimaryButtonDown()) {
+                pause();
+                jumpToIteration((int) (progressSlider.getValue()));
+            }
+        });
+
+        progressSlider.setOnMouseDragExited(e -> {
+            if (isPlaying && e.isPrimaryButtonDown()) {
+                if (!isPaused) {
+                    sequentialTransition.stop();
+                    jumpToIteration((int) (progressSlider.getValue()));
+                    if (pauseControl == null) {
+                        pauseControl = new PauseTransition(Duration.millis(animationDuration));
+                        pauseControl.setOnFinished(ev -> {
+                            play();
+                            pauseControl = null;
+                        });
+                        pauseControl.play();
+                    }
+                } else {
+                    jumpToIteration((int) (progressSlider.getValue()));
+                }
+            }
         });
     }
 
@@ -176,6 +278,9 @@ public class MainController {
     }
 
     public void onResetGraph() {
+        pause();
+        detailShow.setText("");
+        pseudoStep.getChildren().clear();
         graph = new Graph();
         graphPanel = new GraphPanel(graph);
         bindingConsumer();
@@ -185,6 +290,8 @@ public class MainController {
         algo.setText("Choose Algorithm");
         startVertex.clear();
         currentIteration = NO_ITERATION;
+        progressSlider.setMax(0);
+        progressSlider.setValue(0);
 //        graphPanel.setState(stepList.get(0).getState());
         graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
     }
@@ -194,6 +301,14 @@ public class MainController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ALgorithm not selected");
             alert.setHeaderText("Please select an algorithm");
+            alert.showAndWait();
+            return;
+        }
+        Vertex temp = graph.getVertex(startVertex.getText());
+        if (temp == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Start vertex not found");
+            alert.setHeaderText("Please select a valid start vertex");
             alert.showAndWait();
             return;
         }
@@ -241,6 +356,7 @@ public class MainController {
 
     public void startAnimation() {
         maxIteration = stepList.size();
+        progressSlider.setMax(maxIteration - 1);
         if (currentIteration == NO_ITERATION)
             currentIteration = 0;
         isPlaying = true;
@@ -251,7 +367,10 @@ public class MainController {
     private void pause() {
         isPaused = true;
         animationStatus = ANIMATION_PAUSE;
-        sequentialTransition.stop();
+        if (sequentialTransition != null) {
+            sequentialTransition.stop();
+        }
+//        sequentialTransition.stop();
         pauseBtn.setVisible(false);
         playBtn.setVisible(true);
     }
@@ -315,7 +434,7 @@ public class MainController {
             isPaused = true;
             return;
         }
-//        progressSlider.setValue(currentIteration);
+        progressSlider.setValue(currentIteration);
         updateDisplay(stepList.get(currentIteration));
     }
 
@@ -375,6 +494,7 @@ public class MainController {
         }
         if (currentIteration < 0)
             currentIteration = 0;
+        progressSlider.setValue(currentIteration);
         updateDisplay(stepList.get(currentIteration));
     }
 

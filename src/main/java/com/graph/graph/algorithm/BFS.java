@@ -56,14 +56,9 @@ public class BFS extends Algorithm {
         state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges);
         stepList.add(new Step(0, description, state));
         // done step 0
-
-        verticesHighlighted.remove(startVertex);
-        vertexQueued.add(startVertex);
         // core algorithm
         while (queue.size() > 0) {
             currentDistance++;
-
-
             StringBuilder sb = new StringBuilder();
             for (Vertex v : queue) {
                 sb.append(v.getId() + " ");

@@ -96,15 +96,15 @@ public class GraphEdgeLine extends Line implements GraphEdgeBase {
             label.translateXProperty().bind(startXProperty().add(endXProperty().subtract(startXProperty()).divide(2).add(8)));
             label.translateYProperty().bind(startYProperty().add(endYProperty().subtract(startYProperty()).divide(2).add(-8)));
         }
-        if (angle >= 90 && angle < 180) {
+        if (angle >= 90 && angle <= 180) {
             label.translateXProperty().bind(startXProperty().add(endXProperty().subtract(startXProperty()).divide(2).add(8)));
             label.translateYProperty().bind(startYProperty().add(endYProperty().subtract(startYProperty()).divide(2).add(8)));
         }
-        if (angle <= 0 && angle > -90) {
+        if (angle < 0 && angle >= -90) {
             label.translateXProperty().bind(startXProperty().add(endXProperty().subtract(startXProperty()).divide(2).add(-8)));
             label.translateYProperty().bind(startYProperty().add(endYProperty().subtract(startYProperty()).divide(2).add(-8)));
         }
-        if (angle <= -90 && angle > -180) {
+        if (angle < -90 && angle > -180) {
             label.translateXProperty().bind(startXProperty().add(endXProperty().subtract(startXProperty()).divide(2).add(-8)));
             label.translateYProperty().bind(startYProperty().add(endYProperty().subtract(startYProperty()).divide(2).add(8)));
         }
@@ -175,33 +175,18 @@ public class GraphEdgeLine extends Line implements GraphEdgeBase {
 
         switch (state.getState()) {
             case DEFAULT:
-                removeStyleClass("edge-unqueued");
+                removeStyleClass("edge-useless");
                 removeStyleClass("edge-highlighted");
                 removeStyleClass("edge-traversed");
                 if (attachedLabel != null) {
                     attachedLabel.removeStyleClass("edge-label-highlighted");
-                    attachedLabel.removeStyleClass("edge-label-unqueued");
+                    attachedLabel.removeStyleClass("edge-label-useless");
                     attachedLabel.removeStyleClass("edge-label-traversed");
                 }
                 if (attachedArrow != null) {
                     attachedArrow.removeStyleClass("arrow-highlighted");
                     attachedArrow.removeStyleClass("arrow-unqueued");
                     attachedArrow.removeStyleClass("arrow-traversed");
-                }
-                break;
-            case USELESS:
-                removeStyleClass("edge-highlighted");
-                removeStyleClass("edge-traversed");
-                addStyleClass("edge-useless");
-                if (attachedLabel != null) {
-                    attachedLabel.removeStyleClass("edge-label-highlighted");
-                    attachedLabel.removeStyleClass("edge-label-traversed");
-                    attachedLabel.addStyleClass("edge-label-useless");
-                }
-                if (attachedArrow != null) {
-                    attachedArrow.removeStyleClass("arrow-highlighted");
-                    attachedArrow.removeStyleClass("arrow-unqueued");
-                    attachedArrow.addStyleClass("arrow-unqueued");
                 }
                 break;
             case HIGHLIGHTED:
@@ -232,6 +217,21 @@ public class GraphEdgeLine extends Line implements GraphEdgeBase {
                     attachedArrow.removeStyleClass("arrow-unqueued");
                     attachedArrow.removeStyleClass("arrow-highlighted");
                     attachedArrow.addStyleClass("arrow-traversed");
+                }
+                break;
+            case USELESS:
+                removeStyleClass("edge-highlighted");
+                removeStyleClass("edge-traversed");
+                addStyleClass("edge-useless");
+                if (attachedLabel != null) {
+                    attachedLabel.removeStyleClass("edge-label-highlighted");
+                    attachedLabel.removeStyleClass("edge-label-traversed");
+                    attachedLabel.addStyleClass("edge-label-useless");
+                }
+                if (attachedArrow != null) {
+                    attachedArrow.removeStyleClass("arrow-highlighted");
+                    attachedArrow.removeStyleClass("arrow-unqueued");
+                    attachedArrow.addStyleClass("arrow-unqueued");
                 }
                 break;
             default:
