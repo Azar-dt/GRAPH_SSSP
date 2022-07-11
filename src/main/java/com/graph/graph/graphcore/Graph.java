@@ -91,7 +91,7 @@ public class Graph {
         System.out.println("Edge added");
     }
 
-    public void changeEdgeWeight(String vertex1Id, String vertex2Id, int weight) {
+    public void changeEdgeWeight(String vertex1Id, String vertex2Id, double weight) {
         // check if edge exists
         Vertex vertex1 = null;
         Vertex vertex2 = null;
@@ -200,10 +200,37 @@ public class Graph {
         return sb.toString();
     }
 
+    public Vertex getVertex(Vertex vertex) {
+        for (Vertex v : vertices) {
+            if (v.compareTo(vertex) == 0) {
+                return v;
+            }
+        }
+        return null;
+    }
+
     public Vertex getVertex(String id) {
         for (Vertex v : vertices) {
             if (v.getId().equals(id)) {
                 return v;
+            }
+        }
+        return null;
+    }
+
+    public void changeVertexId(Vertex vertex, String newId) {
+        for (Vertex v : vertices) {
+            if (v.compareTo(vertex) == 0) {
+                v.setId(newId);
+                return;
+            }
+        }
+    }
+
+    public Edge getEdge(Edge edge) {
+        for (Edge e : edges) {
+            if (e.compareTo(edge) == 0) {
+                return e;
             }
         }
         return null;

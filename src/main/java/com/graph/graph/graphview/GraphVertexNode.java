@@ -19,7 +19,7 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
 
     private Label attachedLabel = null;
 
-    private Label detailLabel = null;
+    private Label distanceLabel = null;
     private boolean isDragging = false;
 
     private State.VertexState state;
@@ -53,7 +53,7 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
 
         this.underlyingVertex = v;
 //        this.attachedLabel = new Label(x, y, v.getId());
-        this.detailLabel = new Label(x, y, v.getId());
+//        this.distanceLabel = new Label(x, y, v.getId());
         this.isDragging = false;
 
         this.adjacentVertices = new HashSet<>();
@@ -299,10 +299,14 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
         label.yProperty().bind(centerYProperty().add(getRadius() + label.getLayoutBounds().getHeight()));
     }
 
-    public void attachDetailLabel(Label label) {
-        this.detailLabel = label;
-        label.xProperty().bind(centerXProperty().subtract(label.getLayoutBounds().getWidth() / 2.0));
-        label.yProperty().bind(centerYProperty().add(getRadius() + label.getLayoutBounds().getHeight() / 4.0));
+    public void attachDistanceLabel(Label label) {
+        this.distanceLabel = label;
+        label.xProperty().bind(centerXProperty().subtract(label.getLayoutBounds().getWidth()));
+        label.yProperty().bind(centerYProperty().subtract(getRadius() + label.getLayoutBounds().getHeight() / 4.0));
+    }
+
+    public Label getDistanceLabel() {
+        return distanceLabel;
     }
 
     @Override

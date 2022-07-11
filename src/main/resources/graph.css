@@ -17,6 +17,11 @@ STYLESHEET FOR JAVAFXGRAPH VISUALIZATION
     -fx-font: bold 8pt "sans-serif";
 }
 
+.vertex-distance {
+    -fx-font: normal 10pt "sans-serif";
+    -fx-fill: #ff0000;
+}
+
 .vertex-id {
     -fx-font: bold 8pt "sans-serif";
     -fx-fill: #61B5F1;
