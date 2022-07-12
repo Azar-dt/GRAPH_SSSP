@@ -79,7 +79,6 @@ public class GraphEdgeLine extends Line implements GraphEdgeBase {
         this.attachedLabel.addStyleClass("edge-label");
         this.attachedLabel.setUnderline(true);
 
-        System.out.println(label);
         /* rotate label around itself based on this line's angle */
         Rotate rotation = new Rotate();
         rotation.pivotXProperty().bind(translateXProperty());

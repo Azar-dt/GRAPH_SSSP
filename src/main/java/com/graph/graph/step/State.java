@@ -11,19 +11,29 @@ import java.util.Map;
 public class State {
     private Map<Vertex, VertexState> vertexStateMap;
     private Map<Edge, EdgeState> edgeStateMap;
+    private Map<Vertex, Double> distanceMap;
 
-    public State(List<Vertex> vertexList, List<Edge> edgeList, List<Vertex> vertexHighlighted, List<Edge> edgeHighlighted, List<Vertex> vertexTraversed, List<Edge> edgeTraversed, List<Vertex> vertexQueued, List<Edge> uselessEdges) {
+    public State(List<Vertex> vertexList, List<Edge> edgeList, List<Vertex> vertexHighlighted, List<Edge> edgeHighlighted, List<Vertex> vertexTraversed, List<Edge> edgeTraversed, List<Vertex> vertexQueued, List<Edge> uselessEdges, Map<Vertex, Double> distance) {
         vertexStateMap = new HashMap<Vertex, VertexState>();
         edgeStateMap = new HashMap<Edge, EdgeState>();
-
+        distanceMap = new HashMap<Vertex, Double>();
         boolean isDisable = !(vertexHighlighted == null && edgeHighlighted == null && vertexTraversed == null && edgeTraversed == null && vertexQueued == null);
 
         for (Vertex v : vertexList) {
             vertexStateMap.put(v, new VertexState(v, VERTEX_STATE.DEFAULT));
+            distanceMap.put(v, Double.MAX_VALUE);
         }
 
         for (Edge e : edgeList) {
             edgeStateMap.put(e, new EdgeState(e, EDGE_STATE.DEFAULT));
+        }
+
+        if (distance != null) {
+            for (Vertex v : distance.keySet()) {
+                if (distance.get(v) != null) {
+                    distanceMap.put(v, distance.get(v));
+                }
+            }
         }
 
         if (vertexQueued != null)
@@ -61,7 +71,7 @@ public class State {
     }
 
     public State(List<Vertex> vertexList, List<Edge> edgeList) {
-        this(vertexList, edgeList, null, null, null, null, null, null);
+        this(vertexList, edgeList, null, null, null, null, null, null, null);
     }
 
     public static class EdgeState {
@@ -184,5 +194,9 @@ public class State {
 
     public Map<Edge, EdgeState> getEdgeStateMap() {
         return edgeStateMap;
+    }
+
+    public Map<Vertex, Double> getDistanceMap() {
+        return distanceMap;
     }
 }

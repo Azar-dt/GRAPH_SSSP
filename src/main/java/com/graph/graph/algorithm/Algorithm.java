@@ -12,6 +12,8 @@ public abstract class Algorithm {
     protected Graph graph;
     protected HashMap<Integer, String> pseudoStep = new HashMap<Integer, String>();
     protected List<Step> stepList = new ArrayList<>();
+    protected HashMap<Vertex, Double> distance = new HashMap<>();
+    protected HashMap<Vertex, Vertex> parent = new HashMap<>();
     protected Vertex startVertex;
 
     // Declaring ANSI_RESET so that we can reset the color
@@ -55,5 +57,13 @@ public abstract class Algorithm {
 
     public void setStartVertex(Vertex startVertex) {
         this.startVertex = startVertex;
+    }
+
+    public HashMap<Vertex, Double> getDistance() {
+        return distance;
+    }
+
+    public HashMap<Vertex, Vertex> getParent() {
+        return parent;
     }
 }

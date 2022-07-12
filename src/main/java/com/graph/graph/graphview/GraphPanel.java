@@ -55,9 +55,9 @@ public class GraphPanel extends Pane {
     /*
     INTERACTION WITH VERTICES AND EDGES
      */
-    private Consumer<GraphVertex> vertexClickConsumer = null;
+    private Consumer<GraphVertex> vertexDoubleClickConsumer = null;
     private Consumer<GraphVertex> vertexPickConsumer = null;
-    private Consumer<GraphEdge> edgeClickConsumer = null;
+    private Consumer<GraphEdge> edgeDoubleClickConsumer = null;
 
     /*
     AUTOMATIC LAYOUT RELATED ATTRIBUTES
@@ -299,7 +299,7 @@ public class GraphPanel extends Pane {
      * @param action action to be performed
      */
     public void setVertexDoubleClickAction(Consumer<GraphVertex> action) {
-        this.vertexClickConsumer = action;
+        this.vertexDoubleClickConsumer = action;
     }
 
     public void setVertexAltClickAction(Consumer<GraphVertex> action) {
@@ -312,7 +312,7 @@ public class GraphPanel extends Pane {
      * @param action action to be performed
      */
     public void setEdgeDoubleClickAction(Consumer<GraphEdge> action) {
-        this.edgeClickConsumer = action;
+        this.edgeDoubleClickConsumer = action;
     }
 
     /*
@@ -413,6 +413,10 @@ public class GraphPanel extends Pane {
             this.getChildren().add(label);
             v.attachLabel(label);
         }
+        Label label = new Label("∞");
+        label.addStyleClass("vertex-distance");
+        this.getChildren().add(label);
+        v.attachDistanceLabel(label);
     }
 
     private void addEdge(GraphEdgeBase e, Edge edge) {
@@ -605,7 +609,6 @@ public class GraphPanel extends Pane {
                     String text = v.getId();
                     label.setText(text);
                 }
-
             }
         });
 
@@ -614,56 +617,18 @@ public class GraphPanel extends Pane {
             if (edgeNode != null) {
                 Label label = edgeNode.getAttachedLabel();
                 if (label != null) {
-                    String text = e.getWeight() + "";
+                    String text;
+                    if (e.getWeight() == Double.MAX_VALUE) {
+                        text = "∞";
+                    } else {
+                        text = String.valueOf(e.getWeight());
+                    }
                     label.setText(text);
                 }
             }
         });
     }
 
-    /*
-    private String generateVertexLabel(V vertex) {
-
-        try {
-            Class<?> clazz = vertex.getClass();
-            for (Method method : clazz.getDeclaredMethods()) {
-                if (method.isAnnotationPresent(SmartLabelSource.class)) {
-                    method.setAccessible(true);
-                    Object value = method.invoke(vertex);
-                    return value.toString();
-                }
-            }
-        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(SmartGraphPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return vertex != null ? vertex.toString() : "<NULL>";
-    }
-
-    private String generateEdgeLabel(E edge) {
-
-        try {
-            Class<?> clazz = edge.getClass();
-            for (Method method : clazz.getDeclaredMethods()) {
-                if (method.isAnnotationPresent(SmartLabelSource.class)) {
-                    method.setAccessible(true);
-                    Object value = method.invoke(edge);
-                    return value.toString();
-                }
-            }
-        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(SmartGraphPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return edge != null ? edge.toString() : "<NULL>";
-    }
-    */
-
-    /**
-     * Computes the bounding box from all displayed vertices.
-     *
-     * @return bounding box
-     */
     private Bounds getPlotBounds() {
         double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE, maxX = Double.MIN_VALUE, maxY = Double.MIN_VALUE;
 
@@ -996,7 +961,7 @@ public class GraphPanel extends Pane {
 //                System.out.println(mouseEvent);
                 if (mouseEvent.getClickCount() == 2) {
                     //no need to continue otherwise
-                    if (vertexClickConsumer == null && edgeClickConsumer == null) {
+                    if (vertexDoubleClickConsumer == null && edgeDoubleClickConsumer == null) {
                         return;
                     }
 
@@ -1005,15 +970,14 @@ public class GraphPanel extends Pane {
 
                     if (node instanceof GraphVertex) {
                         GraphVertex v = (GraphVertex) node;
-                        vertexClickConsumer.accept(v);
+                        vertexDoubleClickConsumer.accept(v);
                     } else if (node instanceof GraphEdge) {
                         GraphEdge e = (GraphEdge) node;
-                        edgeClickConsumer.accept(e);
+                        edgeDoubleClickConsumer.accept(e);
                     } else {
                         theGraph.addVertex((theGraph.numVertices() + 1) + "", mouseEvent.getX(), mouseEvent.getY());
-//                        System.out.println("Added vertex");
-                        updateNodes();
                     }
+                    updateNodes();
                 }
 
                 if (mouseEvent.isAltDown() && mouseEvent.getClickCount() == 1) {
@@ -1059,7 +1023,7 @@ public class GraphPanel extends Pane {
     private void updateState() {
         Map<Vertex, State.VertexState> vertexStateMap = state.getVertexStateMap();
         Map<Edge, State.EdgeState> edgeStateMap = state.getEdgeStateMap();
-
+        Map<Vertex, Double> distanceMap = state.getDistanceMap();
         for (Vertex v : vertexStateMap.keySet()) {
             GraphVertexNode vv = vertexNodes.get(v);
             if (vv == null)
@@ -1076,6 +1040,18 @@ public class GraphPanel extends Pane {
 
             State.EdgeState state = edgeStateMap.get(e);
             ev.setState(state);
+        }
+
+        for (Vertex v : distanceMap.keySet()) {
+            GraphVertexNode vv = vertexNodes.get(v);
+            if (vv == null)
+                continue;
+
+            double distance = distanceMap.get(v);
+            if (distance != Double.MAX_VALUE) {
+                Label distanceLabel = vv.getDistanceLabel();
+                distanceLabel.setText(String.format("%.1f", distance));
+            }
         }
     }
 

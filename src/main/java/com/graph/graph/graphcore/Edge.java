@@ -3,9 +3,9 @@ package com.graph.graph.graphcore;
 public class Edge implements Comparable<Edge> {
     private Vertex source;
     private Vertex destination;
-    private int weight;
+    private double weight;
 
-    public Edge(Vertex source, Vertex destination, int weight) {
+    public Edge(Vertex source, Vertex destination, double weight) {
         this.source = source;
         this.destination = destination;
         this.weight = weight;
@@ -27,11 +27,11 @@ public class Edge implements Comparable<Edge> {
         this.destination = destination;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 

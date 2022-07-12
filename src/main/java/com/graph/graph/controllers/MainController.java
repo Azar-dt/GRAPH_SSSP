@@ -118,6 +118,7 @@ public class MainController {
                     algorithm = new BellmanFord();
                     algo.setText("Bellman-Ford");
                 }
+                resetControl();
                 initPseudoStep();
             });
         }
@@ -166,18 +167,47 @@ public class MainController {
         });
 
         graphPanel.setVertexDoubleClickAction((GraphVertex graphVertex) -> {
-            System.out.println("Vertex contains element: " + graphVertex.getUnderlyingVertex().getId());
-
-            graphVertex.addStyleClass("myVertex");
+            TextInputDialog dialog = new TextInputDialog("");
+            dialog.setTitle("Set Vertex Label");
+            dialog.setHeaderText("Input Vertex Label");
+            dialog.setContentText("Please input vertex label:");
+            dialog.showAndWait().ifPresent(label -> {
+                Vertex temp = graph.getVertex(label);
+                if (temp != null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Duplicate Vertex");
+                    alert.setContentText("Vertex " + label + " already exists");
+                    alert.showAndWait();
+                } else {
+                    graph.getVertex(graphVertex.getUnderlyingVertex()).setId(label);
+                }
+            });
         });
 
         graphPanel.setEdgeDoubleClickAction(graphEdge -> {
-            System.out.println("Edge contains element: " + graphEdge.getUnderlyingEdge().getWeight());
-            //dynamically change the style when clicked
-            graphEdge.setStyle("-fx-stroke: black; -fx-stroke-width: 3;");
-
-            graphEdge.getStylableArrow().setStyle("-fx-stroke: black; -fx-stroke-width: 3;");
-
+            TextInputDialog dialog = new TextInputDialog("");
+            dialog.setTitle("Set Edge Weight");
+            dialog.setHeaderText("Input Edge Weight");
+            dialog.setContentText("Please input edge Weight:");
+            dialog.showAndWait().ifPresent(label -> {
+                double newWeight;
+                if (label.equals("infinity")) {
+                    graph.getEdge(graphEdge.getUnderlyingEdge()).setWeight(Double.MAX_VALUE);
+                } else {
+                    try {
+                        newWeight = Double.parseDouble(label);
+                    } catch (NumberFormatException e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Invalid Input");
+                        alert.setContentText("Please input a valid number");
+                        alert.showAndWait();
+                        newWeight = graphEdge.getUnderlyingEdge().getWeight();
+                    }
+                    graph.getEdge(graphEdge.getUnderlyingEdge()).setWeight(newWeight);
+                }
+            });
         });
     }
 
@@ -297,21 +327,27 @@ public class MainController {
 
     public void onResetGraph() {
         pause();
-        detailShow.setText("");
-        pseudoStep.getChildren().clear();
-        graph = new Graph();
-        graphPanel = new GraphPanel(graph);
-        bindingConsumer();
-        isPlaying = false;
-        isPaused = false;
         algorithm = null; //reset algorithm
         algo.setText("Choose Algorithm");
         startVertex.clear();
+
+        resetControl();
+//        graphPanel.setState(stepList.get(0).getState());
+        graph = new Graph();
+        graphPanel = new GraphPanel(graph);
+        bindingConsumer();
+        graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
+    }
+
+    private void resetControl() {
+        detailShow.setText("");
+        pseudoStep.getChildren().clear();
+
+        isPlaying = false;
+        isPaused = false;
         currentIteration = NO_ITERATION;
         progressSlider.setMax(0);
         progressSlider.setValue(0);
-//        graphPanel.setState(stepList.get(0).getState());
-        graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
     }
 
     public void onPlayBtn() {
