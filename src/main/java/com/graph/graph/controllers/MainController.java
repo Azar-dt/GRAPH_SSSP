@@ -67,6 +67,12 @@ public class MainController {
     @FXML
     public MenuItem graph1;
     @FXML
+    public MenuItem graph2;
+    @FXML
+    public MenuItem graph3;
+    @FXML
+    public MenuItem graph4;
+    @FXML
     public Slider progressSlider;
     @FXML
     public Rectangle progressRec;
@@ -120,6 +126,18 @@ public class MainController {
             item.setOnAction((ActionEvent event) -> {
                 if (item.getText().equals(graph1.getText())) {
                     graph = Graph.createGraphCP443DU();
+                    initGraphPanel();
+                }
+                if (item.getText().equals(graph2.getText())) {
+                    graph = Graph.createGraphCP410DW();
+                    initGraphPanel();
+                }
+                if (item.getText().equals(graph3.getText())) {
+                    graph = Graph.createGraphCP416DWDAG();
+                    initGraphPanel();
+                }
+                if (item.getText().equals(graph4.getText())) {
+                    graph = Graph.createGraphBIG();
                     initGraphPanel();
                 }
             });
