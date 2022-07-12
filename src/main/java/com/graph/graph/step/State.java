@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class State {
     private Map<Vertex, VertexState> vertexStateMap;
     private Map<Edge, EdgeState> edgeStateMap;

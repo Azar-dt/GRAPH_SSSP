@@ -413,7 +413,7 @@ public class GraphPanel extends Pane {
             this.getChildren().add(label);
             v.attachLabel(label);
         }
-        Label label = new Label("∞");
+        Label label = new Label("");
         label.addStyleClass("vertex-distance");
         this.getChildren().add(label);
         v.attachDistanceLabel(label);

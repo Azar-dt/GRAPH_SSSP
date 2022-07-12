@@ -27,31 +27,4 @@ public class MainApplication extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-    private Graph build_sample_digraph() {
-
-        Graph g = new Graph();
-
-        g.addVertex("A");
-        g.addVertex("B");
-        g.addVertex("C");
-        g.addVertex("D");
-        g.addVertex("E");
-        g.addVertex("F");
-
-        g.addEdge("A", "B");
-        g.addEdge("B", "A");
-        g.addEdge("A", "C");
-        g.addEdge("A", "D");
-        g.addEdge("B", "C");
-        g.addEdge("C", "D");
-        g.addEdge("B", "E");
-        g.addEdge("F", "D");
-        g.addEdge("F", "D");
-
-        //yep, its a loop!
-        g.addEdge("A", "A");
-
-        return g;
-    }
 }

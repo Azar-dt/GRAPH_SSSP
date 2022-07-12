@@ -5,9 +5,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-public class SmartGraphDemoContainer extends BorderPane {
+public class GraphContainer extends BorderPane {
 
-    public SmartGraphDemoContainer(GraphPanel graphView) {
+    public GraphContainer(GraphPanel graphView) {
 
         setCenter(new ContentZoomPane(graphView));
 

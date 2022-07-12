@@ -8,9 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 
-/**
- * @author brunomnsilva
- */
 public class ContentResizerPane extends Pane {
 
     private final Node content;

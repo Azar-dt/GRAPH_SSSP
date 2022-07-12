@@ -25,13 +25,13 @@
             prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.graph.graph.controllers.MainController">
     <center>
-        <SplitPane dividerPositions="0.16703786191536749, 0.844097995545657" prefHeight="550.0" prefWidth="900.0"
+        <SplitPane dividerPositions="0.16926503340757237, 0.844097995545657" prefHeight="550.0" prefWidth="900.0"
                    BorderPane.alignment="CENTER">
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="113.0">
                     <children>
                         <MenuButton fx:id="algo" layoutX="10.0" layoutY="121.0" mnemonicParsing="false"
-                                    text="Choose Algorithm">
+                                    text="Choose Algorithm" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="100.0">
                             <items>
                                 <MenuItem fx:id="bfs" mnemonicParsing="false" text="BFS"/>
                                 <MenuItem fx:id="dijkstra" mnemonicParsing="false" text="Dijkstra"/>
@@ -39,12 +39,16 @@
                             </items>
                         </MenuButton>
                         <TextField fx:id="startVertex" layoutX="10.0" layoutY="195.0" onAction="#onSelectStartVertex"
-                                   onKeyTyped="#onSelectStartVertex" prefHeight="25.0" prefWidth="101.0"/>
-                        <Label layoutX="14.0" layoutY="166.0" text="Input start vertex"/>
+                                   onKeyTyped="#onSelectStartVertex" prefHeight="25.0" prefWidth="58.0"
+                                   AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="170.0"/>
+                        <Label layoutX="14.0" layoutY="166.0" text="Input start vertex" textFill="#6f6b6b"
+                               AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="150.0"/>
                         <Button fx:id="reset" layoutX="10.0" layoutY="508.0" mnemonicParsing="false"
-                                onAction="#onResetGraph" text="Reset graph"/>
-                        <MenuButton fx:id="exampleGraph" layoutX="10.0" layoutY="72.0" mnemonicParsing="false"
-                                    text="ExampleGraph">
+                                onAction="#onResetGraph" prefHeight="25.0" prefWidth="129.0" text="Reset graph"
+                                AnchorPane.bottomAnchor="20.0"/>
+                        <MenuButton fx:id="exampleGraph" layoutX="10.0" layoutY="72.0" minWidth="-Infinity"
+                                    mnemonicParsing="false" prefHeight="25.0" prefWidth="128.0" text="ExampleGraph"
+                                    AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="50.0">
                             <items>
                                 <MenuItem fx:id="graph1" mnemonicParsing="false" text="CP4 4.3 D/U(DAG)"/>
                                 <MenuItem mnemonicParsing="false" text="Action 2"/>
@@ -52,30 +56,33 @@
                         </MenuButton>
                     </children>
                 </AnchorPane>
-                <BorderPane fx:id="graphView" prefHeight="529.0" prefWidth="599.0"/>
-                <AnchorPane prefHeight="353.0" prefWidth="217.0">
+                <BorderPane fx:id="graphView" prefHeight="529.0" prefWidth="628.0"/>
+                <AnchorPane prefHeight="529.0" prefWidth="153.0">
                     <children>
-                        <Label layoutX="-1.0" prefHeight="25.0" prefWidth="211.0" text="Detail"
-                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Label layoutX="-1.0" prefHeight="25.0" prefWidth="211.0" style="-fx-background-color: #ccc;"
+                               text="Detail" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                               AnchorPane.topAnchor="0.0">
                             <font>
                                 <Font name="System Bold" size="16.0"/>
                             </font>
                         </Label>
-                        <Pane fx:id="detailStep" layoutY="39.0" prefHeight="200.0" prefWidth="200.0"
-                              AnchorPane.bottomAnchor="290.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <Pane fx:id="detailStep" layoutY="25.0" prefHeight="214.0" prefWidth="137.0"
+                              AnchorPane.bottomAnchor="290.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="25.0">
                             <children>
-                                <Label fx:id="detailShow" text="Label"/>
+                                <Label fx:id="detailShow"/>
                             </children>
                         </Pane>
-                        <Label layoutX="6.0" layoutY="239.0" prefHeight="25.0" prefWidth="210.0" text="Pseudo Code"
-                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <Label layoutX="6.0" layoutY="239.0" prefHeight="25.0" prefWidth="210.0"
+                               style="-fx-background-color: #ccc;" text="Pseudo Code" AnchorPane.leftAnchor="0.0"
+                               AnchorPane.rightAnchor="0.0">
                             <font>
                                 <Font name="System Bold" size="16.0"/>
                             </font>
                         </Label>
-                        <VBox fx:id="pseudoStep" layoutX="43.0" layoutY="269.0" prefHeight="284.0" prefWidth="210.0"
+                        <VBox fx:id="pseudoStep" layoutX="43.0" layoutY="274.0" prefHeight="255.0" prefWidth="137.0"
                               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                              AnchorPane.topAnchor="269.0"/>
+                              AnchorPane.topAnchor="274.0"/>
                     </children>
                 </AnchorPane>
             </items>
