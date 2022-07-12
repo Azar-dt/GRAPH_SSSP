@@ -16,16 +16,8 @@ public abstract class Algorithm {
     protected HashMap<Vertex, Vertex> parent = new HashMap<>();
     protected Vertex startVertex;
 
-    // Declaring ANSI_RESET so that we can reset the color
-    protected String ANSI_RESET = "\u001B[0m";
-
-    // Declaring the color
-    // Custom declaration
-    protected String ANSI_YELLOW = "\u001B[33m";
-
     public abstract void run();
 
-    public abstract void showStep();
 
     public HashMap<Integer, String> getPseudoStep() {
         return pseudoStep;

@@ -4,7 +4,6 @@ import com.graph.graph.graphcore.Edge;
 import com.graph.graph.graphcore.Vertex;
 import com.graph.graph.step.State;
 import com.graph.graph.step.Step;
-import com.graph.graph.utils.PressEnterToContinue;
 
 import java.io.IOException;
 import java.util.*;
@@ -116,20 +115,5 @@ public class BFS extends Algorithm {
         stepList.add(new Step(5, "End of BFS", state));
     }
 
-    @Override
-    public void showStep() {
-        for (Step step : stepList) {
-            System.out.println(step.toString());
-            System.out.println("----------------------------");
-            for (int i = 0; i < pseudoStep.size(); i++) {
-                if (step.getId() == i) {
-                    System.out.println(ANSI_YELLOW + pseudoStep.get(i) + ANSI_RESET);
-                } else {
-                    System.out.println(pseudoStep.get(i));
-                }
-            }
-            PressEnterToContinue.run();
-        }
-    }
 }
 
