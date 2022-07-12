@@ -30,7 +30,7 @@ public class Graph {
     public void addVertex(String id, double px, double py) {
         for (Vertex v : vertices) {
             if (v.getId().equals(id)) {
-                throw new InvalidVertexException("Vertex already exist");
+                return;
             }
         }
         vertices.add(new Vertex(id, px, py));

@@ -26,7 +26,7 @@ public class BFS extends Algorithm {
     public void run() {
         stepList.clear(); // clear stepList everytime start run algorithm
         Scanner sc = new Scanner(System.in);
-        System.out.println("-------------BFS-------------");
+        System.out.println("BFS algorithm");
         Queue<Vertex> queue = new LinkedList<>();
         HashMap<Vertex, Boolean> visited = new HashMap<>();
         Double currentDistance = 0.0;

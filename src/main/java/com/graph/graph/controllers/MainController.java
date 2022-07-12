@@ -4,7 +4,7 @@ import com.graph.graph.algorithm.Algorithm;
 import com.graph.graph.algorithm.BFS;
 import com.graph.graph.algorithm.BellmanFord;
 import com.graph.graph.algorithm.Dijkstra;
-import com.graph.graph.containers.SmartGraphDemoContainer;
+import com.graph.graph.containers.GraphContainer;
 import com.graph.graph.graphcore.Graph;
 import com.graph.graph.graphcore.Vertex;
 import com.graph.graph.graphview.GraphPanel;
@@ -14,14 +14,14 @@ import com.graph.graph.step.Step;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
+import javafx.beans.Observable;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -95,6 +95,7 @@ public class MainController {
     @FXML
     private void initialize() {
         initGraphPanel();
+//        algo.disableProperty().bind(new SimpleBooleanProperty(isPlaying));
         Platform.runLater(() -> {
             graphPanel.init(); //init graph after scene is created
         });
@@ -112,6 +113,7 @@ public class MainController {
                     algorithm = new BellmanFord();
                     algo.setText("Bellman-Ford");
                 }
+                algo.setPrefWidth(128);
                 resetControl();
                 initPseudoStep();
             });
@@ -122,14 +124,16 @@ public class MainController {
                 if (item.getText().equals(graph1.getText())) {
                     graph = Graph.createGraphCP443DU();
                     initGraphPanel();
+                    exampleGraph.setText(graph1.getText());
                 }
+                exampleGraph.setPrefWidth(128);
             });
         }
     }
 
     private void initGraphPanel() {
         graphPanel = new GraphPanel(graph);
-        graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
+        graphView.setCenter(new GraphContainer(graphPanel));
         bindingConsumer();
     }
 
@@ -230,15 +234,12 @@ public class MainController {
     private void setupProgressShow() {
         progressSlider.setPrefWidth(200);
         progressSlider.setBlockIncrement(1);
-//        progressSlider.maxProperty().bind();
-//        progressRec.heightProperty().bind(progressSlider.heightProperty().subtract(2));
-//        progressRec.widthProperty().bind(progressSlider.widthProperty());
+
 
         progressSlider.valueProperty().addListener((ov, oldValue, newValue) -> {
             int value = Math.round(newValue.floatValue());
             int percent = maxIteration == 0 ? 0 : Math.round((value * 100) / (maxIteration - 1));
-//            String style = String.format("-fx-fill: linear-gradient(to right, #2D819D %d%%, #ccc %d%%);", percent, percent);
-//            progressRec.setStyle(style);
+
             String style = String.format("-fx-background-color: linear-gradient(to right, #2D819D %d%%, #969696 %d%%);", newValue.intValue(), newValue.intValue());
             progressSlider.setValue(value);
         });
@@ -308,28 +309,32 @@ public class MainController {
     }
 
     public void onResetGraph() {
-        pause();
+        resetControl();
         algorithm = null; //reset algorithm
         algo.setText("Choose Algorithm");
-        startVertex.clear();
 
-        resetControl();
 //        graphPanel.setState(stepList.get(0).getState());
         graph = new Graph();
         graphPanel = new GraphPanel(graph);
         bindingConsumer();
-        graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
+        graphView.setCenter(new GraphContainer(graphPanel));
     }
 
     private void resetControl() {
+        pause();
+        algo.setDisable(false);
+        startVertex.setDisable(false);
+        exampleGraph.setDisable(false);
         detailShow.setText("");
         pseudoStep.getChildren().clear();
+        startVertex.clear();
 
         isPlaying = false;
         isPaused = false;
         currentIteration = NO_ITERATION;
         progressSlider.setMax(0);
         progressSlider.setValue(0);
+        graphPanel.setDefaultState();
     }
 
     public void onPlayBtn() {
@@ -391,6 +396,9 @@ public class MainController {
     }
 
     public void startAnimation() {
+        algo.setDisable(true);
+        startVertex.setDisable(true);
+        exampleGraph.setDisable(true);
         maxIteration = stepList.size();
         progressSlider.setMax(maxIteration - 1);
         if (currentIteration == NO_ITERATION)
