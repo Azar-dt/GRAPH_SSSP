@@ -4,7 +4,7 @@ import com.graph.graph.algorithm.Algorithm;
 import com.graph.graph.algorithm.BFS;
 import com.graph.graph.algorithm.BellmanFord;
 import com.graph.graph.algorithm.Dijkstra;
-import com.graph.graph.containers.SmartGraphDemoContainer;
+import com.graph.graph.containers.GraphContainer;
 import com.graph.graph.graphcore.Graph;
 import com.graph.graph.graphcore.Vertex;
 import com.graph.graph.graphview.GraphPanel;
@@ -65,13 +65,15 @@ public class MainController {
     @FXML
     public MenuButton exampleGraph;
     @FXML
-    public MenuItem graph1;
+    public MenuItem graph1, graph6, graph7,graph8, graph9, graph10;
     @FXML
     public MenuItem graph2;
     @FXML
     public MenuItem graph3;
     @FXML
     public MenuItem graph4;
+    @FXML
+    public MenuItem graph5;
     @FXML
     public Slider progressSlider;
     @FXML
@@ -141,13 +143,37 @@ public class MainController {
                     graph = Graph.createGraphBIG();
                     initGraphPanel();
                 }
+                if (item.getText().equals(graph5.getText())) {
+                    graph = Graph.createGraphZigZag();
+                    initGraphPanel();
+                }
+                if (item.getText().equals(graph6.getText())) {
+                    graph = Graph.createGraphWheel();
+                    initGraphPanel();
+                }
+                if (item.getText().equals(graph7.getText())) {
+                    graph = Graph.createGraphCP420();
+                    initGraphPanel();
+                }
+                if (item.getText().equals(graph8.getText())) {
+                    graph = Graph.createGraphCP422();
+                    initGraphPanel();
+                }
+                if (item.getText().equals(graph9.getText())) {
+                    graph = Graph.createDijkstraKiller();
+                    initGraphPanel();
+                }
+                if (item.getText().equals(graph10.getText())) {
+                    graph = Graph.createGraphBellmanFordKiller();
+                    initGraphPanel();
+                }
             });
         }
     }
 
     private void initGraphPanel() {
         graphPanel = new GraphPanel(graph);
-        graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
+        graphView.setCenter(new GraphContainer(graphPanel));
         bindingConsumer();
     }
 
@@ -336,7 +362,7 @@ public class MainController {
         graph = new Graph();
         graphPanel = new GraphPanel(graph);
         bindingConsumer();
-        graphView.setCenter(new SmartGraphDemoContainer(graphPanel));
+        graphView.setCenter(new GraphContainer(graphPanel));
     }
 
     private void resetControl() {

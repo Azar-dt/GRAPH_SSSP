@@ -284,7 +284,193 @@ public class Graph {
         return graph;
     }
 
+    public static Graph createGraphZigZag() {
+        Graph graph = new Graph();
+        graph.addVertex("1", 400, 200);
+        graph.addVertex("0", 200, 400);
+        graph.addVertex("2", 400, 600);
+        graph.addVertex("3", 600, 400);
 
+        graph.addEdge("0", "1");
+        graph.addEdge("0", "2");
+        graph.addEdge("1", "2");
+        graph.addEdge("1", "3");
+        graph.addEdge("2", "3");
+        graph.addEdge("2", "1");
+
+        graph.changeEdgeWeight("0", "1", 4);
+        graph.changeEdgeWeight("0", "2", 8);
+        graph.changeEdgeWeight("1", "2", 1);
+        graph.changeEdgeWeight("1", "3", 8);
+        graph.changeEdgeWeight("2", "1", 1);
+        graph.changeEdgeWeight("2", "3", 3);
+
+        return graph;
+    }
+
+    public static Graph createGraphWheel() {
+        Graph graph = new Graph();
+
+        graph.addVertex("0", 400, 400);
+        graph.addVertex("1", 400, 600);
+        graph.addVertex("2", 200, 400);
+        graph.addVertex("3", 400, 200);
+        graph.addVertex("4", 600, 400);
+
+        graph.addEdge("0", "1");
+        graph.addEdge("0", "2");
+        graph.addEdge("0", "3");
+        graph.addEdge("0", "4");
+        graph.addEdge("1", "2");
+        graph.addEdge("2", "3");
+        graph.addEdge("3", "4");
+        graph.addEdge("4", "1");
+
+        graph.changeEdgeWeight("0", "1", 13);
+        graph.changeEdgeWeight("0", "2", 13);
+        graph.changeEdgeWeight("0", "3", 13);
+        graph.changeEdgeWeight("0", "4", 13);
+        graph.changeEdgeWeight("1", "2", 13);
+        graph.changeEdgeWeight("2", "3", 13);
+        graph.changeEdgeWeight("3", "4", 13);
+        graph.changeEdgeWeight("4", "1", 13);
+
+
+        return graph;
+    }
+
+    public static Graph createGraphCP420() {
+        Graph graph = new Graph();
+
+        graph.addVertex("0", 100, 400);
+        graph.addVertex("1", 300, 300);
+        graph.addVertex("2", 300, 500);
+        graph.addVertex("3", 500, 400);
+        graph.addVertex("4", 700, 400);
+
+        graph.addEdge("0", "1");
+        graph.addEdge("0", "2");
+        graph.addEdge("1", "3");
+        graph.addEdge("2", "3");
+        graph.addEdge("3", "4");
+
+        graph.changeEdgeWeight("0", "1", 1);
+        graph.changeEdgeWeight("1", "2", 10);
+        graph.changeEdgeWeight("1", "3", 2);
+        graph.changeEdgeWeight("2", "3", -10);
+        graph.changeEdgeWeight("3", "4", 3);
+
+
+        return graph;
+    }
+
+    public static Graph createGraphCP422() {
+        Graph graph = new Graph();
+
+        graph.addVertex("0", 100, 200);
+        graph.addVertex("1", 300, 200);
+        graph.addVertex("2", 500, 200);
+        graph.addVertex("3", 700, 200);
+        graph.addVertex("4", 300, 400);
+
+        graph.addEdge("0", "1");
+        graph.addEdge("0", "4");
+        graph.addEdge("1", "2");
+        graph.addEdge("2", "1");
+        graph.addEdge("2", "3");
+
+        graph.changeEdgeWeight("0", "1", 99);
+        graph.changeEdgeWeight("0", "4", -99);
+        graph.changeEdgeWeight("1", "2", 15);
+        graph.changeEdgeWeight("2", "1", -45);
+        graph.changeEdgeWeight("2", "3", 10);
+
+
+        return graph;
+    }
+
+    public static Graph createDijkstraKiller() {
+        Graph graph = new Graph();
+
+        graph.addVertex("0", 100, 500);
+        graph.addVertex("2", 250, 500);
+        graph.addVertex("4", 400, 500);
+        graph.addVertex("6", 550, 500);
+        graph.addVertex("8", 700, 500);
+        graph.addVertex("10", 850, 500);
+
+        graph.addVertex("1", 200, 300);
+        graph.addVertex("3", 350, 300);
+        graph.addVertex("5", 500, 300);
+        graph.addVertex("7", 650, 300);
+        graph.addVertex("9", 800, 300);
+
+        graph.addEdge("0", "1");
+        graph.addEdge("0", "2");
+        graph.addEdge("1", "2");
+        graph.addEdge("2", "3");
+        graph.addEdge("2", "4");
+        graph.addEdge("3", "4");
+        graph.addEdge("4", "5");
+        graph.addEdge("4", "6");
+        graph.addEdge("5", "6");
+        graph.addEdge("6", "7");
+        graph.addEdge("6", "8");
+        graph.addEdge("7", "8");
+        graph.addEdge("8", "9");
+        graph.addEdge("8", "10");
+        graph.addEdge("9", "10");
+
+        graph.changeEdgeWeight("0", "1", 16);
+        graph.changeEdgeWeight("0", "2", 0);
+        graph.changeEdgeWeight("1", "2", -32);
+        graph.changeEdgeWeight("2", "3", 8);
+        graph.changeEdgeWeight("2", "4", 0);
+        graph.changeEdgeWeight("3", "4", -16);
+        graph.changeEdgeWeight("4", "5", 4);
+        graph.changeEdgeWeight("4", "6", 0);
+        graph.changeEdgeWeight("5", "6", -8);
+        graph.changeEdgeWeight("6", "7", 2);
+        graph.changeEdgeWeight("6", "8", 0);
+        graph.changeEdgeWeight("7", "8", -4);
+        graph.changeEdgeWeight("8", "9", 1);
+        graph.changeEdgeWeight("8", "10", 0);
+        graph.changeEdgeWeight("9", "10", -2);
+
+
+
+        return graph;
+    }
+
+    public static Graph createGraphBellmanFordKiller() {
+        Graph graph = new Graph();
+
+        graph.addVertex("0", 100, 500);
+        graph.addVertex("1", 200, 500);
+        graph.addVertex("2", 300, 500);
+        graph.addVertex("3", 400, 500);
+        graph.addVertex("4", 500, 500);
+        graph.addVertex("5", 600, 500);
+        graph.addVertex("6", 700, 500);
+
+        graph.addEdge("0", "1");
+        graph.addEdge("1", "2");
+        graph.addEdge("2", "3");
+        graph.addEdge("3", "4");
+        graph.addEdge("4", "5");
+        graph.addEdge("5", "6");
+
+        graph.changeEdgeWeight("0", "1", 6);
+        graph.changeEdgeWeight("1", "2", 5);
+        graph.changeEdgeWeight("2", "3", 4);
+        graph.changeEdgeWeight("3", "4", 3);
+        graph.changeEdgeWeight("4", "5", 2);
+        graph.changeEdgeWeight("5", "6", 1);
+
+
+
+        return graph;
+    }
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Vertex v : vertices) {

@@ -32,8 +32,8 @@ public class BellmanFord extends Algorithm {
         Queue<Vertex> queue = new LinkedList<>();
         HashMap<Vertex, Boolean> visited = new HashMap<>();
         HashMap<Vertex, Vertex> parent = new HashMap<>();
-        HashMap<Vertex, Integer> distance = new HashMap<>();
-        Integer currentDistance = 0;
+        HashMap<Vertex, Double> distance = new HashMap<>();
+        Double currentDistance = 0.0;
 
         //for save step
         List<Vertex> verticesHighlighted = new LinkedList<>();
@@ -57,7 +57,7 @@ public class BellmanFord extends Algorithm {
         description = startVertex.getId() + " is source vertex.\n"
                 + "Set parent[v] = - 1, d[ " + startVertex.getId() + " ] = 0 and push this vertex to queue.";
         state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted,
-                verticesTraversed, edgesTraversed, vertexQueued, uselessEdges);
+                verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance);
 
         stepList.add(new Step(0, description, state));
 
@@ -68,7 +68,7 @@ public class BellmanFord extends Algorithm {
         // vertices as INFINITE
         for (Vertex vertex :
                 vertexSet) {
-            distance.put(vertex, Integer.MAX_VALUE);
+            distance.put(vertex, Double.MAX_VALUE);
         }
         distance.put(startVertex, currentDistance);
         queue.add(startVertex);
@@ -92,8 +92,10 @@ public class BellmanFord extends Algorithm {
         int count = 1;
         int edge_processed = 1;
         State preState = null;
+        List<Edge> preEdgesTraversed = new LinkedList<>();
+        List<Edge> preUselessEdges = new LinkedList<>();
         boolean isChanged = false;
-        for (int i = 1; i < vertexSet.size() ; ++i) {
+        for (int i = 1; i < vertexSet.size(); ++i) {
 
 
             if (count == 1) {
@@ -104,19 +106,14 @@ public class BellmanFord extends Algorithm {
                         "The highlighted edges are the current SSSP spanning tree so far.";
                 stepList.add(new Step(1, description, new State(vertexList, edgeList,
                         verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed,
-                        vertexQueued, uselessEdges)));
-                verticesTraversed.clear();
-                uselessEdges.clear();
-                vertexQueued.clear();
+                        vertexQueued, uselessEdges, distance)));
             } else {
                 if (isChanged) {
-                    description = edgesTraversed.size() + " orange edge relaxation(s) in the last pass, we will continue.\n" +
+                    description = preEdgesTraversed.size() + " orange edge relaxation(s) in the last pass, we will continue.\n" +
                             "\nThe highlighted edges are the current SSSP spanning tree so far.";
-                    verticesTraversed.addAll(vertexSet);
 
-                }
-                else {
-                    description =  "There is no change in the last pass, we can stop Bellman-Ford now." +
+                } else {
+                    description = "There is no change in the last pass, we can stop Bellman-Ford now." +
                             "\nThe highlighted edges are the current SSSP spanning tree so far.";
                 }
                 stepList.add(new Step(1, description, preState));
@@ -128,13 +125,13 @@ public class BellmanFord extends Algorithm {
             edgesTraversed.clear();
             stepList.add(new Step(1, "Prepare all edges for this #pass: " + count,
                     new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted,
-                            verticesTraversed, edgesTraversed, vertexQueued, uselessEdges)));
+                            verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance)));
             isChanged = false;
             for (Edge edge :
                     edgeSet) {
                 Vertex u = edge.getSource();
                 Vertex v = edge.getDestination();
-                int weight = edge.getWeight();
+                double weight = edge.getWeight();
                 verticesHighlighted.add(u);
                 verticesHighlighted.add(v);
                 edgesHighlighted.add(edge);
@@ -143,43 +140,63 @@ public class BellmanFord extends Algorithm {
                         weight + "),#edge_processed = " + edge_processed;
                 stepList.add(new Step(2, description,
                         new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted,
-                                verticesTraversed, edgesTraversed, vertexQueued, uselessEdges)));
+                                verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance)));
                 verticesHighlighted.clear();
                 edgesHighlighted.clear();
                 vertexQueued.add(u);
                 vertexQueued.add(v);
-                if (distance.get(u) != Integer.MAX_VALUE && distance.get(u) + weight < distance.get(v)) {
+                if (distance.get(u) != Double.MAX_VALUE && distance.get(u) + weight < distance.get(v)) {
                     distance.put(v, distance.get(u) + weight);
+                    if (parent.get(v) != null) {
+                        uselessEdges.add(graph.getEdge(parent.get(v), v));
+                        edgesTraversed.remove(graph.getEdge(parent.get(v), v));
+                        preEdgesTraversed.remove(graph.getEdge(parent.get(v), v));
+                        preUselessEdges.add(graph.getEdge(parent.get(v), v));
+                    }
                     uselessEdges.remove(edge);
                     edgesTraversed.add(edge);
+                    preEdgesTraversed.add(edge);
+                    preUselessEdges.remove(edge);
+                    System.out.println("added");
                     parent.put(v, u);
                     stepList.add(new Step(3, "#Pass:" + count + ", " +
                             "relax(" + u.getId() + "," + v.getId() + "," +
                             weight + "),#edge_processed = " + edge_processed
-                            + "\nd[" +v.getId() +"] = " + distance.get(v)
+                            + "\nd[" + v.getId() + "] = " + distance.get(v)
                             + ", " + "p[" + v.getId() + "] = " + parent.get(v).getId(),
                             new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted,
-                                    verticesTraversed, edgesTraversed, vertexQueued, uselessEdges)));
+                                    verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance)));
                     isChanged = true;
                 } else {
-                    if (!edgesTraversed.contains(edge))
-                    uselessEdges.add(edge);
+                    if (!edgesTraversed.contains(edge)) {
+                        uselessEdges.add(edge);
+                        if (preState == null) {
+                            preUselessEdges.add(edge);
+                        }
+                    }
                     stepList.add(new Step(3, "#Pass:" + count + ", " +
                             "relax(" + u.getId() + "," + v.getId() + "," +
                             weight + "),#edge_processed = " + edge_processed + "\nNo Change.",
                             new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted,
-                                    verticesTraversed, edgesTraversed, vertexQueued, uselessEdges)));
+                                    verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance)));
                 }
 
                 edge_processed++;
             }
-            if (isChanged) {
-                verticesTraversed.addAll(vertexSet);
+            verticesTraversed.addAll(vertexSet);
+            if (preState == null) {
                 preState = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted,
-                        verticesTraversed, edgesTraversed, vertexQueued, uselessEdges);
+                        verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance);
+            } else {
+                preState = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted,
+                        verticesTraversed, preEdgesTraversed, vertexQueued, preUselessEdges, distance);
             }
             count++;
         }
+        description = "#edge_processed = " + edge_processed + ", V*E = " + vertexSet.size() + "*" + edgeSet.size()
+                + " = " + vertexSet.size() * edgeSet.size() + "." +
+                "\nThis is the SSSP spanning tree from source vertex 0.";
+        stepList.add(new Step(4, description, preState));
         /*
         // Step 3: check for negative-weight cycles. The above
         // step guarantees shortest distances if graph doesn't
@@ -194,53 +211,17 @@ public class BellmanFord extends Algorithm {
                 return;
             }
         }
-        printArr(dist, V);
          */
         for (Edge edge :
                 edgeSet) {
             Vertex u = edge.getSource();
             Vertex v = edge.getDestination();
-            int weight = edge.getWeight();
-            if (distance.get(u) != Integer.MAX_VALUE && distance.get(u) + weight < distance.get(v)) {
-//                stepList.add(new Step(3, "Graph contains negative weight cycle"));
-                return;
-
+            double weight = edge.getWeight();
+            if (distance.get(u) != Double.MAX_VALUE && distance.get(u) + weight < distance.get(v)) {
+                stepList.add(new Step(4, "Graph contains negative weight cycle" +
+                        "\nThe Shortest path is WRONG", preState));
             }
 
         }
-//        stepList.add(new Step(3, "#edge_processed = " + edge_processed + ", V*E = " +
-//                vertexSet.size() + "*" + edgeSet.size() + " = " + vertexSet.size() + edgeSet.size() + ".\n" +
-//                "This is the SSSP spanning tree from source vertex 0."));
-        ArrList(distance, vertexSet);
-
-    }
-
-    @Override
-    public void showStep() {
-        for (Step step : stepList) {
-            System.out.println(step.toString());
-            System.out.println("----------------------------");
-            for (int i = 0; i < pseudoStep.size(); i++) {
-                if (step.getId() == i) {
-                    System.out.println(ANSI_YELLOW + pseudoStep.get(i) + ANSI_RESET);
-                } else {
-                    System.out.println(pseudoStep.get(i));
-                }
-            }
-            PressEnterToContinue.run();
-        }
-    }
-
-    public void ArrList(HashMap<Vertex, Integer> distance, Set<Vertex> vertexSet) {
-        System.out.println("Vertex Distance from Source");
-        for (Vertex v :
-                vertexSet) {
-            if (distance.get(v) != Integer.MAX_VALUE)
-                System.out.println(v.getId() + "\t\t" + distance.get(v));
-            else
-                System.out.println(v.getId() + "\t\t∞");
-
-        }
-
     }
 }

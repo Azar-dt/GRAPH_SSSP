@@ -12,7 +12,10 @@ public class State {
     private Map<Edge, EdgeState> edgeStateMap;
     private Map<Vertex, Double> distanceMap;
 
-    public State(List<Vertex> vertexList, List<Edge> edgeList, List<Vertex> vertexHighlighted, List<Edge> edgeHighlighted, List<Vertex> vertexTraversed, List<Edge> edgeTraversed, List<Vertex> vertexQueued, List<Edge> uselessEdges, Map<Vertex, Double> distance) {
+    public State(List<Vertex> vertexList, List<Edge> edgeList, List<Vertex> vertexHighlighted,
+                 List<Edge> edgeHighlighted, List<Vertex> vertexTraversed,
+                 List<Edge> edgeTraversed, List<Vertex> vertexQueued,
+                 List<Edge> uselessEdges, Map<Vertex, Double> distance) {
         vertexStateMap = new HashMap<Vertex, VertexState>();
         edgeStateMap = new HashMap<Edge, EdgeState>();
         distanceMap = new HashMap<Vertex, Double>();

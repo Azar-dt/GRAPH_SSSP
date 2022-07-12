@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXSlider?>
+<!--<?import com.jfoenix.controls.JFXSlider?>-->
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -51,6 +51,15 @@
                                     AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="50.0">
                             <items>
                                 <MenuItem fx:id="graph1" mnemonicParsing="false" text="CP4 4.3 D/U(DAG)"/>
+                                <MenuItem fx:id="graph2" mnemonicParsing="false" text="CP4 4.10 D/W"/>
+                                <MenuItem fx:id="graph3" mnemonicParsing="false" text="CP4 4.16 D/W(DAG)"/>
+                                <MenuItem fx:id="graph4" mnemonicParsing="false" text="BIG"/>
+                                <MenuItem fx:id="graph5" mnemonicParsing="false" text="Zig-Zag"/>
+                                <MenuItem fx:id="graph6" mnemonicParsing="false" text="Wheel Graph"/>
+                                <MenuItem fx:id="graph7" mnemonicParsing="false" text="CP4 4.20 -ve weight (DAG)"/>
+                                <MenuItem fx:id="graph8" mnemonicParsing="false" text="CP4 -ve cycle"/>
+                                <MenuItem fx:id="graph9" mnemonicParsing="false" text="CP4 4.21 (Dijkstra's Killer"/>
+                                <MenuItem fx:id="graph10" mnemonicParsing="false" text="Bellman-Ford Killer"/>
                                 <MenuItem mnemonicParsing="false" text="Action 2"/>
                             </items>
                         </MenuButton>
@@ -181,12 +190,12 @@
                         <Insets left="15.0"/>
                     </padding>
                 </Label>
-                <JFXSlider fx:id="progressSlider" blockIncrement="0.0" max="0.0" minHeight="-Infinity"
+                <Slider fx:id="progressSlider" blockIncrement="0.0" max="0.0" minHeight="-Infinity"
                            minWidth="-Infinity" prefHeight="19.0" prefWidth="130.0" GridPane.columnIndex="9">
                     <GridPane.margin>
                         <Insets top="15.0"/>
                     </GridPane.margin>
-                </JFXSlider>
+                </Slider>
             </children>
         </GridPane>
     </top>
