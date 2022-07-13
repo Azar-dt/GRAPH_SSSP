@@ -119,7 +119,7 @@ public class Dijkstra extends Algorithm {
                         Edge uselessEdge = graph.getEdge(parent.get(v).getId(), v.getId());
                         uselessEdges.add(uselessEdge);
                         // update path to v
-                        queue.add(v);
+                        //queue.add(v);
                         visited.put(v, true);
                         distance.put(v, distance.get(vertex)+tmpDis); // save distance of v to source
                         description = "d["+v.getId()+"] is > d["+vertex.getId()+"] + w[u,v]\n" + "=>Push " + v.getId() + " to queue.\n" + "Set parent["+v.getId()+"] = " + vertex.getId() + ", d[" + v.getId() + "] = " + distance.get(v);
