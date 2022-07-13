@@ -13,11 +13,12 @@ public class Dijkstra extends Algorithm {
         super();
         // init pseudoStep
         pseudoStep.clear();
-        pseudoStep.put(0, "initSSSP, PQ.push(0, sourceVertex)");
-        pseudoStep.put(1, "while PQ is not empty // PQ is Priority queue");
-        pseudoStep.put(2, "    u = PQ.front(), PQ.pop() ");
-        pseudoStep.put(3, "    for each neighbor v of u if u is valid\n\trelax(u,v,w(u,v)) + insert new pair to PQ");
-        pseudoStep.put(4, "End of Dijkstra");
+        pseudoStep.put(0, "show warning if the graph has negative weighted");
+        pseudoStep.put(1, "initSSSP, PQ.push(0, sourceVertex)");
+        pseudoStep.put(2, "while PQ is not empty // PQ is Priority queue");
+        pseudoStep.put(3, "    u = PQ.front(), PQ.pop() ");
+        pseudoStep.put(4, "    for each neighbor v of u if u is valid\n\trelax(u,v,w(u,v)) + insert new pair to PQ");
+        pseudoStep.put(5, "End of Dijkstra");
     }
 
     @Override
@@ -28,6 +29,7 @@ public class Dijkstra extends Algorithm {
         Queue<Vertex> queue = new LinkedList<>();
         HashMap<Vertex, Boolean> visited = new HashMap<>();
         Double currentDistance = 0.0;
+        String wariningmsg = "";
 
         // for save step
         List<Vertex> verticesHighlighted = new LinkedList<>();
@@ -41,6 +43,17 @@ public class Dijkstra extends Algorithm {
         State state; // save state of vertex and edge
         String description; // save description of vertex and edge
 
+        //check if Dijkstra is possible
+        for (Edge edge : edgeList) {
+            if (edge.getWeight() < 0.0) {
+                wariningmsg = "WARNING: The graph is a negative-weighted graph.\n" + "Dijkstra will likely yield wrong SSSP answer.";
+                break;
+            }
+        }
+        if (wariningmsg.length() > 0) {
+            stepList.add(new Step(0, wariningmsg, new State(vertexList, edgeList)));
+        }
+
         // for algorithm
         queue.add(startVertex);
         visited.put(startVertex, true);
@@ -51,7 +64,7 @@ public class Dijkstra extends Algorithm {
         vertexQueued.add(startVertex);
         description = startVertex.getId()+"is the source vertex.\n" + "Set parent[v] = -1, d[v] = Inf, but d["+startVertex.getId()+"] = 0, PQ ={...}";
         state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance);
-        stepList.add(new Step(0, description, state));
+        stepList.add(new Step(1, description, state));
         // done step 0
         // core algorithm
         while (queue.size() > 0) {
@@ -62,7 +75,7 @@ public class Dijkstra extends Algorithm {
             }
             description = "The queue is : { " + sb.toString() + "}";
             state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance);
-            stepList.add(new Step(1, description, state));
+            stepList.add(new Step(2, description, state));
 
             Vertex vertex = queue.remove();
             verticesHighlighted.add(vertex);
@@ -70,7 +83,7 @@ public class Dijkstra extends Algorithm {
             vertexQueued.remove(vertex);
             description = "Current Vertex is (" + vertex.getId()+", " + distance.get(vertex)+")";
             state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance);
-            stepList.add(new Step(2, description, state));
+            stepList.add(new Step(3, description, state));
 
             Set<Vertex> neighbors = graph.getNeighbors(vertex.getId());
             for (Vertex v : neighbors) {
@@ -90,7 +103,7 @@ public class Dijkstra extends Algorithm {
                 tmpDis = currentEdge.getWeight();
                 edgesHighlighted.add(currentEdge);
                 state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance);
-                stepList.add(new Step(3, description, state));
+                stepList.add(new Step(4, description, state));
                 edgesTraversed.add(currentEdge);
                 if (!visited.containsKey(v)) {
                     parent.put(v, vertex); // save the parent of v
@@ -102,7 +115,7 @@ public class Dijkstra extends Algorithm {
                     vertexQueued.add(v);
 //                    verticesTraversed.add(v);
                     state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance);
-                    stepList.add(new Step(3, description, state));
+                    stepList.add(new Step(4, description, state));
                 } else {
                     // v is visited
                     // if d[v] is <= d[u] + w[u,v] => no change
@@ -111,7 +124,7 @@ public class Dijkstra extends Algorithm {
                         edgesHighlighted.remove(currentEdge);
                         uselessEdges.add(currentEdge);
                         state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance);
-                        stepList.add(new Step(3, description, state));
+                        stepList.add(new Step(4, description, state));
                     }
                     //else update distance of v, set u to new parent
                     else {
@@ -127,14 +140,14 @@ public class Dijkstra extends Algorithm {
                         vertexQueued.add(v);
                         //     verticesTraversed.add(v);
                         state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance);
-                        stepList.add(new Step(3, description, state));
+                        stepList.add(new Step(4, description, state));
                     }
                 }
             }
             verticesHighlighted.remove(vertex);
         }
         state = new State(vertexList, edgeList, verticesHighlighted, edgesHighlighted, verticesTraversed, edgesTraversed, vertexQueued, uselessEdges, distance);
-        stepList.add(new Step(4, "End of Dijkstra", state));
+        stepList.add(new Step(5, "End of Dijkstra", state));
     }
 
 }
