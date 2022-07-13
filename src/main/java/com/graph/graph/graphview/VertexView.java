@@ -11,11 +11,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode {
+public class VertexView extends Circle implements GraphVertex, LabelledNode {
 
     private final Vertex underlyingVertex;
     /* Critical for performance, so we don't rely on the efficiency of the Graph.areAdjacent method */
-    private final Set<GraphVertexNode> adjacentVertices;
+    private final Set<VertexView> adjacentVertices;
 
     private Label attachedLabel = null;
 
@@ -41,11 +41,11 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
      * @param allowMove should the vertex be draggable with the mouse
      */
 
-    public GraphVertexNode(Vertex v, double radius, boolean allowMove) {
+    public VertexView(Vertex v, double radius, boolean allowMove) {
         this(v, radius, allowMove, null);
     }
 
-    public GraphVertexNode(Vertex v, double radius, boolean allowMove, State.VertexState state) {
+    public VertexView(Vertex v, double radius, boolean allowMove, State.VertexState state) {
         super(v.getPositionX(), v.getPositionY(), radius);
         double x = v.getPositionX();
         double y = v.getPositionY();
@@ -77,7 +77,7 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
      *
      * @param v vertex to add
      */
-    public void addAdjacentVertex(GraphVertexNode v) {
+    public void addAdjacentVertex(VertexView v) {
         this.adjacentVertices.add(v);
     }
 
@@ -87,7 +87,7 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
      * @param v vertex to remove
      * @return true if <code>v</code> existed; false otherwise.
      */
-    public boolean removeAdjacentVertex(GraphVertexNode v) {
+    public boolean removeAdjacentVertex(VertexView v) {
         return this.adjacentVertices.remove(v);
     }
 
@@ -98,7 +98,7 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
      * @param col collection of vertices
      * @return true if any vertex was effectively removed
      */
-    public boolean removeAdjacentVertices(Collection<GraphVertexNode> col) {
+    public boolean removeAdjacentVertices(Collection<VertexView> col) {
         return this.adjacentVertices.removeAll(col);
     }
 
@@ -108,7 +108,7 @@ public class GraphVertexNode extends Circle implements GraphVertex, LabelledNode
      * @param v vertex to check
      * @return true if adjacent; false otherwise
      */
-    public boolean isAdjacentTo(GraphVertexNode v) {
+    public boolean isAdjacentTo(VertexView v) {
         return this.adjacentVertices.contains(v);
     }
 

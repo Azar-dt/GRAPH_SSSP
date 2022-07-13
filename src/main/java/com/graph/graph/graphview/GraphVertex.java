@@ -2,7 +2,7 @@ package com.graph.graph.graphview;
 
 import com.graph.graph.graphcore.Vertex;
 
-public interface GraphVertex<V> extends StylableNode {
+public interface GraphVertex extends StylableNode {
 
     /**
      * Returns the underlying (stored reference) graph vertex.

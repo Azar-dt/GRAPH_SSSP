@@ -65,7 +65,7 @@ public class MainController {
     @FXML
     public MenuButton exampleGraph;
     @FXML
-    public MenuItem graph1, graph6, graph7,graph8, graph9, graph10;
+    public MenuItem graph1, graph6, graph7, graph8, graph9, graph10;
     @FXML
     public MenuItem graph2;
     @FXML
@@ -120,6 +120,7 @@ public class MainController {
                     algorithm = new BellmanFord();
                     algo.setText("Bellman-Ford");
                 }
+                algo.setPrefWidth(128);
                 resetControl();
                 initPseudoStep();
             });
@@ -167,6 +168,8 @@ public class MainController {
                     graph = Graph.createGraphBellmanFordKiller();
                     initGraphPanel();
                 }
+                exampleGraph.setText(item.getText());
+                exampleGraph.setPrefWidth(128);
             });
         }
     }
@@ -367,8 +370,11 @@ public class MainController {
 
     private void resetControl() {
         detailShow.setText("");
-        pseudoStep.getChildren().clear();
+        algo.setDisable(false);
+        startVertex.setDisable(false);
+        exampleGraph.setDisable(false);
 
+        pseudoStep.getChildren().clear();
         isPlaying = false;
         isPaused = false;
         currentIteration = NO_ITERATION;
@@ -435,6 +441,9 @@ public class MainController {
     }
 
     public void startAnimation() {
+        algo.setDisable(true);
+        startVertex.setDisable(true);
+        exampleGraph.setDisable(true);
         maxIteration = stepList.size();
         progressSlider.setMax(maxIteration - 1);
         if (currentIteration == NO_ITERATION)

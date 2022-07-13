@@ -9,25 +9,25 @@ import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
-public class GraphEdgeLine extends Line implements GraphEdgeBase {
+public class EdgeView extends Line implements GraphEdgeBase {
 
     private final Edge underlyingEdge;
 
     private State.EdgeState state;
 
-    private final GraphVertexNode inbound;
-    private final GraphVertexNode outbound;
+    private final VertexView inbound;
+    private final VertexView outbound;
     private Label attachedLabel = null;
     private Arrow attachedArrow = null;
 
     /* Styling proxy */
     private final StyleProxy styleProxy;
 
-    public GraphEdgeLine(Edge e, GraphVertexNode inbound, GraphVertexNode outbound) {
+    public EdgeView(Edge e, VertexView inbound, VertexView outbound) {
         this(e, inbound, outbound, null);
     }
 
-    public GraphEdgeLine(Edge edge, GraphVertexNode inbound, GraphVertexNode outbound, State.EdgeState state) {
+    public EdgeView(Edge edge, VertexView inbound, VertexView outbound, State.EdgeState state) {
         if (inbound == null || outbound == null) {
             throw new IllegalArgumentException("Cannot connect null vertices.");
         }

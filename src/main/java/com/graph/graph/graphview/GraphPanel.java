@@ -43,10 +43,10 @@ public class GraphPanel extends Pane {
     INTERNAL DATA STRUCTURE
      */
     private final Graph theGraph;
-    private final Map<Vertex, GraphVertexNode> vertexNodes;
+    private final Map<Vertex, VertexView> vertexNodes;
     private final Map<Edge, GraphEdgeBase> edgeNodes;
     private Map<Edge, Tuple<Vertex>> connections;
-    private final Map<Tuple<GraphVertexNode>, Integer> placedEdges = new HashMap<>();
+    private final Map<Tuple<VertexView>, Integer> placedEdges = new HashMap<>();
     private boolean initialized = false;
     private final boolean edgesWithArrows;
 
@@ -322,7 +322,7 @@ public class GraphPanel extends Pane {
 
         /* create vertex graphical representations */
         for (Vertex vertex : listOfVertices()) {
-            GraphVertexNode vertexAnchor = new GraphVertexNode(vertex, graphProperties.getVertexRadius(), graphProperties.getVertexAllowUserMove());
+            VertexView vertexAnchor = new VertexView(vertex, graphProperties.getVertexRadius(), graphProperties.getVertexAllowUserMove());
 
             vertexNodes.put(vertex, vertexAnchor);
         }
@@ -344,8 +344,8 @@ public class GraphPanel extends Pane {
 
                 Vertex oppositeVertex = theGraph.opposite(vertex, edge);
 
-                GraphVertexNode graphVertexIn = vertexNodes.get(vertex);
-                GraphVertexNode graphVertexOppositeOut = vertexNodes.get(oppositeVertex);
+                VertexView graphVertexIn = vertexNodes.get(vertex);
+                VertexView graphVertexOppositeOut = vertexNodes.get(oppositeVertex);
 
                 graphVertexIn.addAdjacentVertex(graphVertexOppositeOut);
                 graphVertexOppositeOut.addAdjacentVertex(graphVertexIn);
@@ -369,13 +369,13 @@ public class GraphPanel extends Pane {
 
         /* place vertices above lines */
         for (Vertex vertex : vertexNodes.keySet()) {
-            GraphVertexNode v = vertexNodes.get(vertex);
+            VertexView v = vertexNodes.get(vertex);
 
             addVertex(v);
         }
     }
 
-    private GraphEdgeBase createEdge(Edge edge, GraphVertexNode graphVertexInbound, GraphVertexNode graphVertexOutbound) {
+    private GraphEdgeBase createEdge(Edge edge, VertexView graphVertexInbound, VertexView graphVertexOutbound) {
         /*
         Even if edges are later removed, the corresponding index remains the same. Otherwise, we would have to
         regenerate the appropriate edges.
@@ -388,7 +388,7 @@ public class GraphPanel extends Pane {
 
         GraphEdgeBase graphEdge;
 
-        graphEdge = new GraphEdgeLine(edge, graphVertexInbound, graphVertexOutbound);
+        graphEdge = new EdgeView(edge, graphVertexInbound, graphVertexOutbound);
 
 
         placedEdges.put(new Tuple(graphVertexInbound, graphVertexOutbound), ++edgeIndex);
@@ -396,7 +396,7 @@ public class GraphPanel extends Pane {
         return graphEdge;
     }
 
-    private void addVertex(GraphVertexNode v) {
+    private void addVertex(VertexView v) {
         this.getChildren().add(v);
 
         String labelText = v.getId();
@@ -443,7 +443,7 @@ public class GraphPanel extends Pane {
     private void insertNodes() {
         Collection<Vertex> unplottedVertices = unplottedVertices();
 
-        List<GraphVertexNode> newVertices = null;
+        List<VertexView> newVertices = null;
 
         Bounds bounds = getPlotBounds();
         double mx = bounds.getMinX() + bounds.getWidth() / 2.0;
@@ -466,7 +466,7 @@ public class GraphPanel extends Pane {
                 } else {
                     Edge firstEdge = incidentEdges.iterator().next();
                     Vertex opposite = theGraph.opposite(vertex, firstEdge);
-                    GraphVertexNode existing = vertexNodes.get(opposite);
+                    VertexView existing = vertexNodes.get(opposite);
 
                     if (existing == null) {
                         /*
@@ -486,7 +486,7 @@ public class GraphPanel extends Pane {
                     }
                 }
 //                vertex.setPosition(x, y);
-                GraphVertexNode newVertex = new GraphVertexNode(vertex, graphProperties.getVertexRadius(), graphProperties.getVertexAllowUserMove());
+                VertexView newVertex = new VertexView(vertex, graphProperties.getVertexRadius(), graphProperties.getVertexAllowUserMove());
 
                 //track new nodes
                 newVertices.add(newVertex);
@@ -504,8 +504,8 @@ public class GraphPanel extends Pane {
                 Vertex u = vertices[0]; //oubound if digraph, by javadoc requirement
                 Vertex v = vertices[1]; //inbound if digraph, by javadoc requirement
 
-                GraphVertexNode graphVertexOut = vertexNodes.get(u);
-                GraphVertexNode graphVertexIn = vertexNodes.get(v);
+                VertexView graphVertexOut = vertexNodes.get(u);
+                VertexView graphVertexIn = vertexNodes.get(v);
 
                 /*
                 Updates may be coming too fast and we can get out of sync.
@@ -535,7 +535,7 @@ public class GraphPanel extends Pane {
         }
 
         if (newVertices != null) {
-            for (GraphVertexNode v : newVertices) {
+            for (VertexView v : newVertices) {
                 addVertex(v);
             }
         }
@@ -555,8 +555,8 @@ public class GraphPanel extends Pane {
             Tuple<Vertex> vertexTuple = connections.get(e);
 
             if (getTotalEdgesBetween(vertexTuple.first, vertexTuple.second) == 0) {
-                GraphVertexNode v0 = vertexNodes.get(vertexTuple.first);
-                GraphVertexNode v1 = vertexNodes.get(vertexTuple.second);
+                VertexView v0 = vertexNodes.get(vertexTuple.first);
+                VertexView v1 = vertexNodes.get(vertexTuple.second);
 
                 v0.removeAdjacentVertex(v1);
                 v1.removeAdjacentVertex(v0);
@@ -568,7 +568,7 @@ public class GraphPanel extends Pane {
         //remove vertices (graphical elements) that were removed from the underlying graph
         Collection<Vertex> removedVertices = removedVertices();
         for (Vertex removedVertex : removedVertices) {
-            GraphVertexNode removed = vertexNodes.remove(removedVertex);
+            VertexView removed = vertexNodes.remove(removedVertex);
             removeVertex(removed);
         }
 
@@ -588,7 +588,7 @@ public class GraphPanel extends Pane {
         }
     }
 
-    private void removeVertex(GraphVertexNode v) {
+    private void removeVertex(VertexView v) {
         getChildren().remove(v);
 
         Text attachedLabel = v.getAttachedLabel();
@@ -602,7 +602,7 @@ public class GraphPanel extends Pane {
      */
     private void updateLabels() {
         theGraph.getVertices().forEach((v) -> {
-            GraphVertexNode vertexNode = vertexNodes.get(v);
+            VertexView vertexNode = vertexNodes.get(v);
             if (vertexNode != null) {
                 Label label = vertexNode.getAttachedLabel();
                 if (label != null) {
@@ -635,7 +635,7 @@ public class GraphPanel extends Pane {
         if (vertexNodes.size() == 0)
             return new BoundingBox(0, 0, getWidth(), getHeight());
 
-        for (GraphVertexNode v : vertexNodes.values()) {
+        for (VertexView v : vertexNodes.values()) {
             minX = Math.min(minX, v.getCenterX());
             minY = Math.min(minY, v.getCenterY());
             maxX = Math.max(maxX, v.getCenterX());
@@ -650,8 +650,8 @@ public class GraphPanel extends Pane {
      * AUTOMATIC LAYOUT
      */
     private void computeForces() {
-        for (GraphVertexNode v : vertexNodes.values()) {
-            for (GraphVertexNode other : vertexNodes.values()) {
+        for (VertexView v : vertexNodes.values()) {
+            for (VertexView other : vertexNodes.values()) {
                 if (v == other) {
                     continue; //NOP
                 }
@@ -681,7 +681,7 @@ public class GraphPanel extends Pane {
         }
     }
 
-    private boolean areAdjacent(GraphVertexNode v, GraphVertexNode u) {
+    private boolean areAdjacent(VertexView v, VertexView u) {
         return v.isAdjacentTo(u);
     }
 
@@ -759,9 +759,9 @@ public class GraphPanel extends Pane {
         List<Vertex> removed = new LinkedList<>();
 
         Collection<Vertex> graphVertices = theGraph.getVertices();
-        Collection<GraphVertexNode> plotted = vertexNodes.values();
+        Collection<VertexView> plotted = vertexNodes.values();
 
-        for (GraphVertexNode v : plotted) {
+        for (VertexView v : plotted) {
             if (!graphVertices.contains(v.getUnderlyingVertex())) {
                 removed.add(v.getUnderlyingVertex());
             }
@@ -820,7 +820,7 @@ public class GraphPanel extends Pane {
      * @param y y-coordinate on panel
      */
     public void setVertexPosition(Vertex v, double x, double y) {
-        GraphVertexNode node = vertexNodes.get(v);
+        VertexView node = vertexNodes.get(v);
         if (node != null) {
             node.setPosition(x, y);
         }
@@ -833,7 +833,7 @@ public class GraphPanel extends Pane {
      * @return the x-coordinate or NaN if the vertex does not exist
      */
     public double getVertexPositionX(Vertex v) {
-        GraphVertexNode node = vertexNodes.get(v);
+        VertexView node = vertexNodes.get(v);
         if (node != null) {
             return node.getPositionCenterX();
         }
@@ -847,7 +847,7 @@ public class GraphPanel extends Pane {
      * @return the y-coordinate or NaN if the vertex does not exist
      */
     public double getVertexPositionY(Vertex v) {
-        GraphVertexNode node = vertexNodes.get(v);
+        VertexView node = vertexNodes.get(v);
         if (node != null) {
             return node.getPositionCenterY();
         }
@@ -911,7 +911,7 @@ public class GraphPanel extends Pane {
      * @return stylable element (label)
      */
     public StylableNode getStylableLabel(Vertex v) {
-        GraphVertexNode vertex = vertexNodes.get(v);
+        VertexView vertex = vertexNodes.get(v);
 
         return vertex != null ? vertex.getStylableLabel() : null;
     }
@@ -1025,7 +1025,7 @@ public class GraphPanel extends Pane {
         Map<Edge, State.EdgeState> edgeStateMap = state.getEdgeStateMap();
         Map<Vertex, Double> distanceMap = state.getDistanceMap();
         for (Vertex v : vertexStateMap.keySet()) {
-            GraphVertexNode vv = vertexNodes.get(v);
+            VertexView vv = vertexNodes.get(v);
             if (vv == null)
                 continue;
 
@@ -1043,7 +1043,7 @@ public class GraphPanel extends Pane {
         }
 
         for (Vertex v : distanceMap.keySet()) {
-            GraphVertexNode vv = vertexNodes.get(v);
+            VertexView vv = vertexNodes.get(v);
             if (vv == null)
                 continue;
 
