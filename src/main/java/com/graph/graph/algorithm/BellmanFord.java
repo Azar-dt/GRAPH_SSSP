@@ -195,7 +195,7 @@ public class BellmanFord extends Algorithm {
         }
         description = "#edge_processed = " + edge_processed + ", V*E = " + vertexSet.size() + "*" + edgeSet.size()
                 + " = " + vertexSet.size() * edgeSet.size() + "." +
-                "\nThis is the SSSP spanning tree from source vertex 0.";
+                "\nThis is the SSSP spanning tree from source vertex"+startVertex.getId()+".";
         stepList.add(new Step(4, description, preState));
         /*
         // Step 3: check for negative-weight cycles. The above
