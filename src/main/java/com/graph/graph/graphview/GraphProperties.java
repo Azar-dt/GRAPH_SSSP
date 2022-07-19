@@ -43,7 +43,6 @@ public class GraphProperties {
     private static final double DEFAULT_ATTRACTION_SCALE = 10;
     private static final String PROPERTY_ATTRACTION_SCALE = "layout.attraction-scale";
 
-    private static final String DEFAULT_FILE = "src/main/resources/application.properties";
     private Properties properties;
 
     /**
@@ -53,9 +52,9 @@ public class GraphProperties {
         properties = new Properties();
 
         try {
-            properties.load(new FileInputStream(DEFAULT_FILE));
+            properties.load(new FileInputStream(getClass().getResource("/application.properties").toExternalForm()));
         } catch (IOException ex) {
-            String msg = String.format("The default %s was not found. Using default values.", DEFAULT_FILE);
+            String msg = "The default %s was not found. Using default values.";
             Logger.getLogger(GraphProperties.class.getName()).log(Level.WARNING, msg);
         }
     }

@@ -148,7 +148,6 @@ public class GraphPanel extends Pane {
                 timer.stop();
             }
         });
-
     }
 
     private State createDefaultState() {
@@ -187,6 +186,7 @@ public class GraphPanel extends Pane {
         } else if (this.initialized) {
             throw new IllegalStateException("Already initialized. Use update() method instead.");
         }
+
 
         this.initialized = true;
     }
@@ -938,8 +938,8 @@ public class GraphPanel extends Pane {
             if (cssFile != null) {
                 css = cssFile.toURL().toExternalForm();
             } else {
-                File f = new File("src/main/resources/graph.css");
-                css = f.toURI().toURL().toExternalForm();
+//                File f = new File();
+                css = getClass().getResource("/graph.css").toExternalForm();
             }
 
             getStylesheets().add(css);

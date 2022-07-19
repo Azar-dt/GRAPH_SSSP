@@ -1,0 +1,28 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Graph:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Graph_jar</output-path>
+    <root id="archive" name="Graph.jar">
+      <element id="module-output" name="Graph" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfxtras/jfxtras-icalendarfx/10.0-r1/jfxtras-icalendarfx-10.0-r1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfxtras/jfxtras-all/10.0-r1/jfxtras-all-10.0-r1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfxtras/jfxtras-font-roboto/10.0-r1/jfxtras-font-roboto-10.0-r1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/17.0.1/javafx-controls-17.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/17.0.1/javafx-fxml-17.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/17.0.1/javafx-graphics-17.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfxtras/jfxtras-common/10.0-r1/jfxtras-common-10.0-r1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/controlsfx/controlsfx/11.1.1/controlsfx-11.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfxtras/jfxtras-agenda/10.0-r1/jfxtras-agenda-10.0-r1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfxtras/jfxtras-controls/10.0-r1/jfxtras-controls-10.0-r1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfxtras/jfxtras-menu/10.0-r1/jfxtras-menu-10.0-r1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/17.0.1/javafx-fxml-17.0.1-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/17.0.1/javafx-base-17.0.1-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfxtras/jfxtras-fxml/10.0-r1/jfxtras-fxml-10.0-r1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/jfoenix/jfoenix/9.0.10/jfoenix-9.0.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/17.0.1/javafx-base-17.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/17.0.1/javafx-graphics-17.0.1-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfxtras/jfxtras-icalendaragenda/10.0-r1/jfxtras-icalendaragenda-10.0-r1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/17.0.1/javafx-controls-17.0.1-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfxtras/jfxtras-gauge-linear/10.0-r1/jfxtras-gauge-linear-10.0-r1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

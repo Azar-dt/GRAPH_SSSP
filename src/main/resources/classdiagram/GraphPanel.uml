@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="-478.1618752139634" y="243.93395713151097">com.graph.graph.graphcore.Graph</node>
+    <node x="544.7754834718141" y="-5.3464128936264785">com.graph.graph.graphview.GraphProperties</node>
+    <node x="-519.5537659195945" y="18.676444249230713">com.graph.graph.step.State</node>
+    <node x="-39.753134146266945" y="-14.385810482730676">com.graph.graph.graphview.GraphPanel</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.graph.graph.graphview.GraphPanel" target="com.graph.graph.graphview.GraphProperties" relationship="TO_ONE">
+      <point x="170.00000000000003" y="93.03939758910417" />
+      <point x="-150.5" y="0.0" />
+    </edge>
+    <edge source="com.graph.graph.graphview.GraphPanel" target="com.graph.graph.graphview.GraphProperties" relationship="CREATE">
+      <point x="170.00000000000003" y="108.03939758910417" />
+      <point x="-150.5" y="15.0" />
+    </edge>
+    <edge source="com.graph.graph.graphview.GraphPanel" target="com.graph.graph.graphcore.Graph" relationship="TO_ONE">
+      <point x="-170.0" y="34.31976761424164" />
+      <point x="78.5" y="0.0" />
+    </edge>
+    <edge source="com.graph.graph.graphview.GraphPanel" target="com.graph.graph.step.State" relationship="CREATE">
+      <point x="-170.0" y="-161.9377452680386" />
+      <point x="136.0" y="15.0" />
+    </edge>
+    <edge source="com.graph.graph.graphview.GraphPanel" target="com.graph.graph.step.State" relationship="TO_ONE">
+      <point x="-170.0" y="-176.9377452680386" />
+      <point x="136.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Channel" zoom="0.6915173867228663" showDependencies="true" x="177.4321904761905" y="362.8304761904761" />
+  <SelectedNodes>
+    <node>com.graph.graph.graphview.GraphPanel</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

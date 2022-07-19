@@ -34,6 +34,7 @@ public class ContentZoomPane extends BorderPane {
         this.content = content;
 
         Node center = content;
+//        center.prefWidth(1000);
         content.toFront();
 
         setCenter(center);

@@ -1,7 +1,6 @@
 module com.graph.graph {
     requires javafx.controls;
     requires javafx.fxml;
-    requires org.controlsfx.controls;
     requires java.logging;
 
     exports com.graph.graph;

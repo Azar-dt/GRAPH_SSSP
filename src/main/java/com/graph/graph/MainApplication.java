@@ -17,9 +17,8 @@ public class MainApplication extends Application {
         Parent root = loader.load();
         Scene scene = new Scene(root);
         Stage stage = new Stage(StageStyle.DECORATED);
-        stage.setTitle("JavaFX SmartGraph Visualization");
-        stage.setMinHeight(500);
-        stage.setMinWidth(800);
+        stage.setTitle("SSSP Algorithm Graph Visualization");
+        stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
     }
